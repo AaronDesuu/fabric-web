@@ -20,9 +20,7 @@ export default async function ShopPage({ params, searchParams }) {
         return matchesSearch && matchesCategory;
     });
 
-    // Use translations for the page title, falling back to Navigation messages for now
-    // Ideally should have a 'Shop' namespace
-    const t = await getTranslations({ locale, namespace: 'Navigation' });
+    const t = await getTranslations({ locale, namespace: 'Shop' });
 
     const categories = [
         { value: 'cotton', label: locale === 'id' ? 'Katun' : 'Cotton' },
@@ -34,10 +32,13 @@ export default async function ShopPage({ params, searchParams }) {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <div className={styles.titleRow}>
+                <div className={styles.titleSection}>
                     <h1 className={styles.title}>
-                        {t('shop')}
+                        {t('title')}
                     </h1>
+                    <p className={styles.description}>
+                        {t('description')}
+                    </p>
                 </div>
             </div>
 
