@@ -65,7 +65,7 @@ export default async function ProductPage({ params }) {
                 </div>
 
                 <div className="mt-8 flex gap-4">
-                    <AddToCart product={product} label={tProduct.addToCart} />
+                    <AddToCart product={product} label={tProduct.addToCart} locale={locale} />
                 </div>
             </div>
         </div >

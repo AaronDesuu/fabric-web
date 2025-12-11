@@ -44,7 +44,9 @@
     "whatsapp": "Chat on WhatsApp"
   },
   "Product": {
-    "perMeter": "/ meter"
+    "perMeter": "/ meter",
+    "showFineControl": "+ Precise measurement (0.25m)",
+    "hideFineControl": "− Hide precise measurement"
   },
   "Checkout": {
     "title": "Checkout",

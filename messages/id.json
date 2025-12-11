@@ -44,7 +44,9 @@
     "whatsapp": "Chat via WhatsApp"
   },
   "Product": {
-    "perMeter": "/ meter"
+    "perMeter": "/ meter",
+    "showFineControl": "+ Ukuran presisi (0.25m)",
+    "hideFineControl": "− Sembunyikan ukuran presisi"
   },
   "Checkout": {
     "title": "Checkout",
