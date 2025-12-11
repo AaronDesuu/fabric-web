@@ -1,89 +1,111 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
     width: 100%;
 }
 
 .quantityControl {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 0.25rem;
-    gap: 0.5rem;
-    background: #fff;
-}
-
-.buttonGroup {
-    display: flex;
-    gap: 2px;
-}
-
-.qtyBtn {
-    border: none;
-    cursor: pointer;
-    background: transparent;
-    transition: all 0.2s;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
 }
 
-.qtyBtn:hover {
+.qtyBtnLarge {
+    height: 48px;
+    min-width: 56px;
+    padding: 0 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    background: var(--color-secondary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.15);
+}
+
+.qtyBtnLarge:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(15, 23, 42, 0.25);
+}
+
+.qtyBtnLarge:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2);
+}
+
+.mainAction {
+    font-size: 1.25rem;
+}
+
+.qtyBtnSmall {
+    height: 36px;
+    min-width: 60px;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.qtyBtnSmall:hover {
+    background: var(--color-secondary);
+    color: white;
+    border-color: var(--color-secondary);
     transform: translateY(-1px);
 }
 
-.qtyBtnMain {
+.qtyBtnSmall:active {
+    transform: translateY(0);
+}
+
+.quantityDisplay {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: white;
     padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 700;
-    min-width: 45px;
-    background: var(--color-secondary);
-    /* Midnight Blue */
-    color: white;
-    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2);
-}
-
-.qtyBtnMain:hover {
-    background: #1e293b;
-    /* Slightly lighter midnight blue */
-    box-shadow: 0 4px 6px rgba(15, 23, 42, 0.3);
-}
-
-.qtyBtnSub {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    min-width: 35px;
-    background: #f1f5f9;
-    /* Slate 100 */
-    color: var(--color-secondary);
-    border: 1px solid #e2e8f0;
-}
-
-.qtyBtnSub:hover {
-    background: #e2e8f0;
-    color: var(--color-primary);
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    min-width: 80px;
+    justify-content: center;
 }
 
 .qtyInput {
     border: none;
-    width: 60px;
+    width: 45px;
     text-align: center;
-    padding: 0.25rem;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    background: transparent;
     -moz-appearance: textfield;
     appearance: textfield;
+    outline: none;
 }
 
 .qtyInput::-webkit-outer-spin-button,
 .qtyInput::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.unit {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
 }
 
 .addToCart {

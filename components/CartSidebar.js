@@ -59,14 +59,36 @@ export default function CartSidebar({ locale }) {
                                         <p className={styles.price}>{formatPrice(item.price)}</p>
                                     </div>
                                     <div className={styles.controls}>
-                                        <div className={styles.qtyGroup}>
-                                            <button onClick={() => changeQuantity(item, -1)} title="-1m" className={styles.btnMain}>-1</button>
-                                            <button onClick={() => changeQuantity(item, -0.25)} title="-0.25m" className={styles.btnSub}>-0.25</button>
-                                        </div>
-                                        <span className={styles.qtyDisplay}>{item.quantity}m</span>
-                                        <div className={styles.qtyGroup}>
-                                            <button onClick={() => changeQuantity(item, 0.25)} title="+0.25m" className={styles.btnSub}>+0.25</button>
-                                            <button onClick={() => changeQuantity(item, 1)} title="+1m" className={styles.btnMain}>+1</button>
+                                        <div className={styles.quantityControl}>
+                                            <button
+                                                onClick={() => changeQuantity(item, -1)}
+                                                title="-1m"
+                                                className={styles.btnLarge}
+                                            >
+                                                −1
+                                            </button>
+                                            <button
+                                                onClick={() => changeQuantity(item, -0.25)}
+                                                title="-0.25m"
+                                                className={styles.btnSmall}
+                                            >
+                                                −0.25
+                                            </button>
+                                            <span className={styles.qtyDisplay}>{item.quantity}m</span>
+                                            <button
+                                                onClick={() => changeQuantity(item, 0.25)}
+                                                title="+0.25m"
+                                                className={styles.btnSmall}
+                                            >
+                                                +0.25
+                                            </button>
+                                            <button
+                                                onClick={() => changeQuantity(item, 1)}
+                                                title="+1m"
+                                                className={styles.btnLarge}
+                                            >
+                                                +1
+                                            </button>
                                         </div>
                                         <button
                                             onClick={() => setItemToRemove(item.id)}

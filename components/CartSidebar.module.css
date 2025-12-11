@@ -59,108 +59,119 @@
 
 .item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 0.75rem;
     margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
 }
 
 .itemInfo h4 {
     font-size: 1rem;
     margin-bottom: 0.25rem;
+    color: var(--color-secondary);
 }
 
 .price {
-    color: var(--color-secondary);
-    font-weight: 500;
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
 .controls {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    /* Allow wrapping on small screens if needed */
+    justify-content: space-between;
+    gap: 0.75rem;
 }
 
-.qtyGroup {
-    display: flex;
-    gap: 2px;
-}
-
-.qtyGroup button {
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
+.quantityControl {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.25rem;
+    background: white;
+    padding: 0.375rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
 }
 
-.qtyGroup button:hover {
+.btnLarge {
+    height: 36px;
+    min-width: 42px;
+    padding: 0 0.625rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    background: var(--color-secondary);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btnLarge:hover {
+    background: #1e293b;
     transform: translateY(-1px);
 }
 
-.btnMain {
-    width: auto;
-    min-width: 36px;
-    height: 32px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    background: var(--color-secondary);
-    /* Midnight Blue */
-    color: white;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.btnLarge:active {
+    transform: translateY(0);
 }
 
-.btnMain:hover {
-    background: #1e293b;
-}
-
-.btnSub {
-    width: auto;
-    min-width: 30px;
-    height: 24px;
+.btnSmall {
+    height: 28px;
+    min-width: 48px;
+    padding: 0 0.5rem;
     font-size: 0.75rem;
     font-weight: 600;
-    background: #f1f5f9;
     color: var(--color-secondary);
-    border: 1px solid #e2e8f0;
-    margin-top: 4px;
-    /* Slight alignment offset */
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
 }
 
-.btnSub:hover {
-    background: #e2e8f0;
-    color: var(--color-primary);
+.btnSmall:hover {
+    background: var(--color-secondary);
+    color: white;
+    border-color: var(--color-secondary);
+}
+
+.btnSmall:active {
+    transform: scale(0.95);
 }
 
 .qtyDisplay {
-    font-weight: 600;
-    min-width: 40px;
+    font-weight: 700;
+    min-width: 42px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    color: var(--color-secondary);
 }
 
 .removeBtn {
-    width: auto !important;
-    height: auto !important;
+    width: 36px !important;
+    height: 36px !important;
     border: none !important;
-    background: none !important;
-    padding: 0.25rem;
-    margin-left: 0.5rem;
-    color: #999;
+    background: white !important;
+    border-radius: 6px !important;
+    padding: 0.5rem;
+    color: #94a3b8;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid #e2e8f0 !important;
 }
 
 .removeBtn:hover {
-    color: #d32f2f;
-    /* Red hover */
+    color: #ef4444;
+    background: #fee2e2 !important;
+    border-color: #fecaca !important;
 }
 
 .footer {
