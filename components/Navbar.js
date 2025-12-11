@@ -25,91 +25,104 @@ export default function Navbar({ locale }) {
     }, [pathname]);
 
     return (
-        <nav className="sticky top-0 z-[100] bg-white/95 backdrop-blur-sm border-b border-black/5 shadow-sm">
-            <div className="max-w-container mx-auto px-4 py-4 flex justify-between items-center">
-                <div className="flex items-center gap-4">
-                    {/* Hamburger Button (Mobile Only) */}
-                    <button
-                        className="flex md:hidden bg-transparent border-none cursor-pointer text-gray-900 p-0"
-                        onClick={() => setIsMobileMenuOpen(true)}
-                        aria-label="Open Menu"
-                    >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </button>
+        <>
+            <nav className="sticky top-0 z-[100] bg-white/95 backdrop-blur-sm border-b border-black/5 shadow-sm">
+                <div className="max-w-container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                        {/* Hamburger Button (Mobile Only) */}
+                        <button
+                            className="flex md:hidden bg-transparent border-none cursor-pointer text-gray-900 p-0"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            aria-label="Open Menu"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </button>
 
-                    <Link href="/" className="font-heading text-2xl font-bold text-primary uppercase tracking-wider">Scorpio</Link>
+                        <Link href="/" className="font-heading text-2xl font-bold text-primary uppercase tracking-wider">Scorpio</Link>
+                    </div>
+
+                    {/* Desktop Links */}
+                    <div className="hidden md:flex gap-8 items-center">
+                        <Link href="/shop" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('shop')}</Link>
+                        <Link href="/contact" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('contact')}</Link>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                        {/* Simplified Language Switcher */}
+                        <button
+                            onClick={switchLocale}
+                            className="bg-transparent border border-gray-200 px-2 py-1 rounded text-xs font-semibold cursor-pointer text-gray-900 transition-all duration-200 hover:bg-primary hover:border-primary hover:text-white"
+                            title={locale === 'id' ? 'Change to English' : 'Ubah ke Bahasa Indonesia'}
+                        >
+                            {locale.toUpperCase()}
+                        </button>
+
+                        <button
+                            onClick={() => setIsOpen(true)}
+                            className="relative bg-transparent border-none cursor-pointer text-gray-900 p-0 flex items-center"
+                            aria-label="Cart"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            {totalItems > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-[18px] h-[18px] rounded-full flex justify-center items-center font-semibold">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </button>
+                    </div>
                 </div>
 
-                {/* Desktop Links */}
-                <div className="hidden md:flex gap-8 items-center">
-                    <Link href="/shop" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('shop')}</Link>
-                    <Link href="/contact" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('contact')}</Link>
-                </div>
+                {/* Mobile Navigation Drawer */}
+            </nav>
 
-                <div className="flex items-center gap-6">
-                    {/* Simplified Language Switcher */}
-                    <button
-                        onClick={switchLocale}
-                        className="bg-transparent border border-gray-200 px-2 py-1 rounded text-xs font-semibold cursor-pointer text-gray-900 transition-all duration-200 hover:bg-primary hover:border-primary hover:text-white"
-                        title={locale === 'id' ? 'Change to English' : 'Ubah ke Bahasa Indonesia'}
-                    >
-                        {locale.toUpperCase()}
-                    </button>
-
-                    <button
-                        onClick={() => setIsOpen(true)}
-                        className="relative bg-transparent border-none cursor-pointer text-gray-900 p-0 flex items-center"
-                        aria-label="Cart"
-                    >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="9" cy="21" r="1"></circle>
-                            <circle cx="20" cy="21" r="1"></circle>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                        </svg>
-                        {totalItems > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-[18px] h-[18px] rounded-full flex justify-center items-center font-semibold">
-                                {totalItems}
-                            </span>
-                        )}
-                    </button>
-                </div>
-            </div>
-
-            {/* Mobile Navigation Drawer */}
-            <div className={`fixed inset-0 z-[200] transition-all duration-300 ${isMobileMenuOpen ? 'visible' : 'invisible'}`}>
+            {/* Mobile Navigation Drawer - Moved outside nav to avoid backdrop-filter containing block issues */}
+            <div
+                className={`fixed inset-0 z-[200] transition-visibility duration-300 ${isMobileMenuOpen ? 'visible' : 'invisible'}`}
+                aria-hidden={!isMobileMenuOpen}
+            >
                 {/* Overlay */}
                 <div
-                    className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+                    className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                 ></div>
 
                 {/* Drawer Content */}
-                <div className={`absolute top-0 left-0 w-[250px] h-full bg-white p-8 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <button
-                        className="self-end bg-transparent border-none cursor-pointer text-gray-600 mb-8"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-
-                    <div className="flex flex-col gap-6">
-                        <Link href="/" className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>{t('home')}</Link>
-                        <Link href="/shop" className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>{t('shop')}</Link>
-                        <Link href="/contact" className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>{t('contact')}</Link>
+                <div
+                    className={`absolute top-0 left-0 w-[280px] h-full bg-white shadow-2xl flex flex-col p-6 transition-transform duration-300 ease-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+                >
+                    <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+                        <span className="font-heading text-xl text-primary font-bold uppercase tracking-wider">Scorpio</span>
+                        <button
+                            className="bg-transparent border-none cursor-pointer text-gray-500 hover:text-primary transition-colors p-2"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            aria-label="Close Menu"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
                     </div>
 
-                    <div className="mt-auto border-t border-gray-100 pt-4">
-                        <p className="text-xs text-gray-500">Scorpio Textiles</p>
+                    <div className="flex flex-col gap-2">
+                        <Link href="/" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('home')}</Link>
+                        <Link href="/shop" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('shop')}</Link>
+                        <Link href="/contact" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('contact')}</Link>
+                    </div>
+
+                    <div className="mt-auto border-t border-gray-100 pt-6">
+                        <p className="text-xs text-gray-400 text-center">© 2024 Scorpio Textiles</p>
                     </div>
                 </div>
             </div>
-        </nav>
+        </>
     );
 }

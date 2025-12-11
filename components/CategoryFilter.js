@@ -97,42 +97,53 @@ export default function CategoryFilter({ categories, locale }) {
             </button>
 
             {isOpen && (
-                <div className="absolute top-[calc(100%_+_0.5rem)] right-0 min-w-[240px] bg-white border border-[#eee] rounded-lg shadow-lg z-50 animate-fadeIn md:right-0 md:left-auto md:w-auto md:max-w-none fixed left-4 right-4 top-auto w-auto max-w-none md:absolute">
-                    <div className="flex justify-between items-center p-3.5 px-4 border-b border-[#f0f0f0]">
-                        <span className="font-semibold text-sm text-secondary uppercase tracking-wide">
-                            {locale === 'id' ? 'Filter Kategori' : 'Filter Categories'}
-                        </span>
-                        {selectedCategories.length > 0 && (
-                            <button className="bg-transparent border-none text-primary text-sm font-semibold cursor-pointer px-2 py-1 rounded hover:bg-[#fff5f5] transition-colors" onClick={clearAll}>
-                                {locale === 'id' ? 'Hapus Semua' : 'Clear All'}
-                            </button>
-                        )}
+                <>
+                    {/* Mobile Backdrop (Transparent, just for closing) */}
+                    <div className="fixed inset-0 z-[40] md:hidden" onClick={() => setIsOpen(false)}></div>
+
+                    {/* Dropdown */}
+                    <div className="
+                        absolute top-[calc(100%_+_0.5rem)] right-0 w-[280px] max-w-[calc(100vw-2rem)] bg-white border border-[#eee] rounded-lg shadow-xl z-[50] animate-fadeIn
+                        md:w-auto md:max-w-none md:min-w-[240px] md:shadow-lg
+                    ">
+                        <div className="flex justify-between items-center p-3.5 px-4 border-b border-[#f0f0f0]">
+                            <span className="font-semibold text-sm text-secondary uppercase tracking-wide">
+                                {locale === 'id' ? 'Filter Kategori' : 'Filter Categories'}
+                            </span>
+                            <div className="flex gap-2">
+                                {selectedCategories.length > 0 && (
+                                    <button className="bg-transparent border-none text-primary text-sm font-semibold cursor-pointer px-2 py-1 rounded hover:bg-[#fff5f5] transition-colors" onClick={clearAll}>
+                                        {locale === 'id' ? 'Hapus' : 'Clear'}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        <ul className="list-none p-2 m-0 max-h-[300px] overflow-y-auto">
+                            {categories.map((cat) => (
+                                <li
+                                    key={cat.value}
+                                    className="p-0 m-0 cursor-pointer"
+                                    onClick={() => toggleCategory(cat.value)}
+                                >
+                                    <label className="flex items-center gap-3 p-3 px-3.5 rounded-md cursor-pointer transition-colors relative hover:bg-gray-50 group">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedCategories.includes(cat.value)}
+                                            onChange={() => { }}
+                                            className="absolute opacity-0 w-0 h-0 peer"
+                                        />
+                                        <span className="w-5 h-5 border-2 border-slate-300 rounded flex items-center justify-center bg-white transition-all shrink-0 peer-checked:bg-primary peer-checked:border-primary">
+                                            <svg className="opacity-0 scale-50 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100 stroke-white" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span className="text-[0.95rem] text-[#444] font-medium select-none peer-checked:text-secondary peer-checked:font-semibold">{cat.label}</span>
+                                    </label>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                    <ul className="list-none p-2 m-0 max-h-[300px] overflow-y-auto">
-                        {categories.map((cat) => (
-                            <li
-                                key={cat.value}
-                                className="p-0 m-0 cursor-pointer"
-                                onClick={() => toggleCategory(cat.value)}
-                            >
-                                <label className="flex items-center gap-3 p-3 px-3.5 rounded-md cursor-pointer transition-colors relative hover:bg-gray-50 group">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedCategories.includes(cat.value)}
-                                        onChange={() => { }}
-                                        className="absolute opacity-0 w-0 h-0 peer"
-                                    />
-                                    <span className="w-5 h-5 border-2 border-slate-300 rounded flex items-center justify-center bg-white transition-all shrink-0 peer-checked:bg-primary peer-checked:border-primary">
-                                        <svg className="opacity-0 scale-50 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100 stroke-white" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    </span>
-                                    <span className="text-[0.95rem] text-[#444] font-medium select-none peer-checked:text-secondary peer-checked:font-semibold">{cat.label}</span>
-                                </label>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                </>
             )}
         </div>
     );
