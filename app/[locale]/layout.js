@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { Analytics } from '@vercel/analytics/react';
 import "../globals.css";
 
 export const metadata = {
@@ -34,6 +35,7 @@ export default async function LocaleLayout({ children, params }) {
             {children}
           </CartProvider>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
