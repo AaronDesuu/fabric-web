@@ -9,13 +9,17 @@ export default async function ShopPage({ params, searchParams }) {
     const { locale } = await params;
     const { q, category } = await searchParams;
     const query = q ? q.toLowerCase() : '';
-    const categoryFilter = category ? category.toLowerCase() : '';
+
+    // Support multiple categories (comma-separated)
+    const selectedCategories = category ? category.toLowerCase().split(',').filter(Boolean) : [];
 
     const filteredProducts = products.filter(product => {
         const name = product.name[locale].toLowerCase();
         const desc = product.description[locale].toLowerCase();
         const matchesSearch = name.includes(query) || desc.includes(query);
-        const matchesCategory = categoryFilter ? product.category === categoryFilter : true;
+
+        // Match if any selected category matches, or if no category filter
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
 
         return matchesSearch && matchesCategory;
     });

@@ -11,7 +11,8 @@ export default function CategoryFilter({ categories, locale }) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
 
-    const currentCategory = searchParams.get('category') || '';
+    // Get selected categories from URL (comma-separated)
+    const selectedCategories = searchParams.get('category')?.split(',').filter(Boolean) || [];
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -27,23 +28,49 @@ export default function CategoryFilter({ categories, locale }) {
         };
     }, []);
 
-    const handleCategoryChange = (category) => {
+    const toggleCategory = (category) => {
         const params = new URLSearchParams(searchParams);
-        if (category) {
-            params.set('category', category);
+        let newCategories = [...selectedCategories];
+
+        if (newCategories.includes(category)) {
+            // Remove category
+            newCategories = newCategories.filter(c => c !== category);
+        } else {
+            // Add category
+            newCategories.push(category);
+        }
+
+        if (newCategories.length > 0) {
+            params.set('category', newCategories.join(','));
         } else {
             params.delete('category');
         }
+
         replace(`${pathname}?${params.toString()}`);
-        setIsOpen(false);
     };
 
-    const selectedLabel = categories.find(c => c.value === currentCategory)?.label || (locale === 'id' ? 'Semua Kategori' : 'All Categories');
+    const clearAll = () => {
+        const params = new URLSearchParams(searchParams);
+        params.delete('category');
+        replace(`${pathname}?${params.toString()}`);
+    };
+
+    const getLabel = () => {
+        if (selectedCategories.length === 0) {
+            return locale === 'id' ? 'Semua Kategori' : 'All Categories';
+        } else if (selectedCategories.length === 1) {
+            return categories.find(c => c.value === selectedCategories[0])?.label || '';
+        } else {
+            return `${selectedCategories.length} ${locale === 'id' ? 'Dipilih' : 'Selected'}`;
+        }
+    };
+
+    const selectedLabel = getLabel();
 
     return (
         <div className={styles.container} ref={containerRef}>
             <button
-                className={`${styles.trigger} ${isOpen ? styles.active : ''}`}
+                className={`${styles.trigger} ${isOpen ? styles.active : ''} ${selectedCategories.length > 0 ? styles.hasSelection : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
@@ -70,27 +97,42 @@ export default function CategoryFilter({ categories, locale }) {
             </button>
 
             {isOpen && (
-                <ul className={styles.dropdown} role="listbox">
-                    <li
-                        className={`${styles.option} ${currentCategory === '' ? styles.selected : ''}`}
-                        onClick={() => handleCategoryChange('')}
-                        role="option"
-                        aria-selected={currentCategory === ''}
-                    >
-                        {locale === 'id' ? 'Semua Kategori' : 'All Categories'}
-                    </li>
-                    {categories.map((cat) => (
-                        <li
-                            key={cat.value}
-                            className={`${styles.option} ${currentCategory === cat.value ? styles.selected : ''}`}
-                            onClick={() => handleCategoryChange(cat.value)}
-                            role="option"
-                            aria-selected={currentCategory === cat.value}
-                        >
-                            {cat.label}
-                        </li>
-                    ))}
-                </ul>
+                <div className={styles.dropdown}>
+                    <div className={styles.dropdownHeader}>
+                        <span className={styles.dropdownTitle}>
+                            {locale === 'id' ? 'Filter Kategori' : 'Filter Categories'}
+                        </span>
+                        {selectedCategories.length > 0 && (
+                            <button className={styles.clearBtn} onClick={clearAll}>
+                                {locale === 'id' ? 'Hapus Semua' : 'Clear All'}
+                            </button>
+                        )}
+                    </div>
+                    <ul className={styles.optionList}>
+                        {categories.map((cat) => (
+                            <li
+                                key={cat.value}
+                                className={styles.checkboxOption}
+                                onClick={() => toggleCategory(cat.value)}
+                            >
+                                <label className={styles.checkboxLabel}>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedCategories.includes(cat.value)}
+                                        onChange={() => {}}
+                                        className={styles.checkbox}
+                                    />
+                                    <span className={styles.checkmark}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                    <span className={styles.optionLabel}>{cat.label}</span>
+                                </label>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             )}
         </div>
     );
