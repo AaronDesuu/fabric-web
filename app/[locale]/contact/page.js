@@ -24,7 +24,7 @@ export default async function ContactPage({ params }) {
                         <span className="font-semibold min-w-[100px]">{t('addressLabel')}:</span>
                         <span>
                             Jl. Textile Premium No. 88<br />
-                            Jakarta Pusat, Indonesia 10110
+                            Surabaya, Jawa Timur, Indonesia
                         </span>
                     </div>
 

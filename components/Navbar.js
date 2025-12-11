@@ -48,6 +48,7 @@ export default function Navbar({ locale }) {
                     {/* Desktop Links */}
                     <div className="hidden md:flex gap-8 items-center">
                         <Link href="/shop" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('shop')}</Link>
+                        <Link href="/payment-delivery" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('paymentDelivery')}</Link>
                         <Link href="/contact" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('contact')}</Link>
                     </div>
 
@@ -115,6 +116,7 @@ export default function Navbar({ locale }) {
                     <div className="flex flex-col gap-2">
                         <Link href="/" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('home')}</Link>
                         <Link href="/shop" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('shop')}</Link>
+                        <Link href="/payment-delivery" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('paymentDelivery')}</Link>
                         <Link href="/contact" className="text-lg font-medium text-gray-800 py-3 px-2 rounded-lg hover:bg-gray-50 hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{t('contact')}</Link>
                     </div>
 

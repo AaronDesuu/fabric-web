@@ -8,7 +8,23 @@
     "home": "Home",
     "shop": "Shop",
     "contact": "Contact",
-    "cart": "Cart"
+    "cart": "Cart",
+    "paymentDelivery": "Payment & Delivery"
+  },
+  "PaymentDelivery": {
+    "title": "Payment & Delivery Methods",
+    "paymentTitle": "Payment Methods",
+    "deliveryTitle": "Delivery Methods",
+    "bankTransfer": "Bank Transfer",
+    "bankTransferDesc": "We accept transfers key BCA and Mandiri. Account details will be provided at checkout.",
+    "ewallet": "E-Wallet & QRIS",
+    "ewalletDesc": "Scan QRIS or pay via OVO & Gopay for instant confirmation.",
+    "shipping": "Shipping Services",
+    "shippingDesc": "We ship nationwide via JNE and J&T Express.",
+    "instant": "Instant Delivery (Surabaya Only)",
+    "instantDesc": "Same-day delivery via Gojek or Grab for Surabaya area.",
+    "pickup": "Store Pickup",
+    "pickupDesc": "Pick up your order directly at our store in Surabaya."
   },
   "Shop": {
     "title": "Our Premium Fabric Collection",
@@ -17,7 +33,7 @@
   "Contact": {
     "title": "Contact Us",
     "aboutTitle": "About Scorpio Textiles",
-    "aboutText": "Scorpio Textiles is a premium fabric provider based in Jakarta. We specialize in high-quality materials including Silk, Cotton, Linen, and Velvet. Our mission is to provide the finest fabrics for fashion designers, tailors, and textile enthusiasts across Indonesia and beyond.",
+    "aboutText": "Scorpio Textiles is a premium fabric provider based in Surabaya. We specialize in high-quality materials including Silk, Cotton, Linen, and Velvet. Our mission is to provide the finest fabrics for fashion designers, tailors, and textile enthusiasts across Indonesia and beyond.",
     "infoTitle": "Shop Information",
     "addressLabel": "Address"
   },

@@ -8,7 +8,23 @@
     "home": "Beranda",
     "shop": "Belanja",
     "contact": "Kontak",
-    "cart": "Keranjang"
+    "cart": "Keranjang",
+    "paymentDelivery": "Pembayaran & Pengiriman"
+  },
+  "PaymentDelivery": {
+    "title": "Metode Pembayaran & Pengiriman",
+    "paymentTitle": "Metode Pembayaran",
+    "deliveryTitle": "Metode Pengiriman",
+    "bankTransfer": "Transfer Bank",
+    "bankTransferDesc": "Kami menerima transfer via BCA dan Mandiri. Detail rekening akan diberikan saat checkout.",
+    "ewallet": "E-Wallet & QRIS",
+    "ewalletDesc": "Scan QRIS atau bayar via OVO & Gopay untuk konfirmasi instan.",
+    "shipping": "Jasa Pengiriman",
+    "shippingDesc": "Kami mengirim ke seluruh Indonesia via JNE dan J&T Express.",
+    "instant": "Pengiriman Instan (Khusus Surabaya)",
+    "instantDesc": "Pengiriman hari yang sama via Gojek atau Grab untuk area Surabaya.",
+    "pickup": "Ambil di Toko",
+    "pickupDesc": "Ambil pesanan Anda langsung di toko kami di Surabaya."
   },
   "Shop": {
     "title": "Koleksi Kain Premium Kami",
@@ -17,7 +33,7 @@
   "Contact": {
     "title": "Hubungi Kami",
     "aboutTitle": "Tentang Scorpio Textiles",
-    "aboutText": "Scorpio Textiles adalah penyedia kain premium yang berbasis di Jakarta. Kami mengkhususkan diri dalam bahan berkualitas tinggi termasuk Sutra, Katun, Linen, dan Beludru. Misi kami adalah menyediakan kain terbaik bagi perancang busana, penjahit, dan penggemar tekstil di seluruh Indonesia dan sekitarnya.",
+    "aboutText": "Scorpio Textiles adalah penyedia kain premium yang berbasis di Surabaya. Kami mengkhususkan diri dalam bahan berkualitas tinggi termasuk Sutra, Katun, Linen, dan Beludru. Misi kami adalah menyediakan kain terbaik bagi perancang busana, penjahit, dan penggemar tekstil di seluruh Indonesia dan sekitarnya.",
     "infoTitle": "Informasi Toko",
     "addressLabel": "Alamat"
   },
