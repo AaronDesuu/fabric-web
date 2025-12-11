@@ -47,7 +47,10 @@ export default async function ProductPage({ params }) {
                 </div>
 
                 <div>
-                    <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>{tProduct.description}</h3>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.25rem', color: 'var(--color-secondary)' }}>
+                        {locale === 'id' ? 'Lebar' : 'Width'}: {product.width}m
+                    </h3>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem', marginTop: '1.5rem' }}>{tProduct.description}</h3>
                     <p className={styles.description}>{product.description[locale]}</p>
                 </div>
 
