@@ -4,7 +4,7 @@ import { usePathname, useRouter } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-import styles from './SearchBar.module.css';
+
 
 export default function SearchBar({ placeholder }) {
     const searchParams = useSearchParams();
@@ -49,14 +49,14 @@ export default function SearchBar({ placeholder }) {
     // Actually simplest is just onChange updates state, and a separate debounce calls router.
 
     return (
-        <div className={styles.container}>
+        <div className="relative flex-1 min-w-[200px]">
             <input
-                className={styles.input}
+                className="w-full py-3 px-4 pl-10 border border-[#e5e5e5] rounded-md font-inherit text-base transition-colors duration-200 bg-[#fafafa] focus:outline-none focus:border-primary focus:bg-white"
                 placeholder={placeholder}
                 value={term}
                 onChange={(e) => handleSearch(e.target.value)}
             />
-            <svg className={styles.icon} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999] pointer-events-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
         </div>

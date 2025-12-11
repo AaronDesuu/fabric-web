@@ -1,7 +1,7 @@
 import AddToCart from '@/components/AddToCart';
 import { products } from '@/lib/products';
 import { notFound } from 'next/navigation';
-import styles from './ProductDetail.module.css';
+
 
 export async function generateStaticParams() {
     const locales = ['en', 'id'];
@@ -46,28 +46,28 @@ export default async function ProductPage({ params }) {
     }).format(product.price);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.imageWrapper}>
-                <img src={product.image} alt={product.name[locale]} className={styles.image} />
+        <div className="max-w-container mx-auto py-8 md:py-16 px-4 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
+            <div className="bg-[#f5f5f0] rounded-lg overflow-hidden relative aspect-square">
+                <img src={product.image} alt={product.name[locale]} className="w-full h-full object-cover" />
             </div>
-            <div className={styles.info}>
-                <h1 className={styles.title}>{product.name[locale]}</h1>
-                <div className={styles.price}>
-                    {price} <span className={styles.unit}>/ meter</span>
+            <div className="flex flex-col gap-6">
+                <h1 className="font-heading text-5xl text-primary">{product.name[locale]}</h1>
+                <div className="text-3xl font-semibold text-secondary">
+                    {price} <span className="text-base font-normal text-gray-500">/ meter</span>
                 </div>
 
                 <div>
-                    <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.25rem', color: 'var(--color-secondary)' }}>
+                    <h3 className="font-heading mb-1 text-secondary">
                         {locale === 'id' ? 'Lebar' : 'Width'}: {product.width}m
                     </h3>
-                    <h3 style={{ fontFamily: 'var(--font-heading)', marginBottom: '0.5rem', marginTop: '1.5rem' }}>{tProduct.description}</h3>
-                    <p className={styles.description}>{product.description[locale]}</p>
+                    <h3 className="font-heading mb-2 mt-6 text-xl text-primary">{tProduct.description}</h3>
+                    <p className="text-[1.1rem] text-[#555] leading-relaxed">{product.description[locale]}</p>
                 </div>
 
-                <div className={styles.actions}>
+                <div className="mt-8 flex gap-4">
                     <AddToCart product={product} label={tProduct.addToCart} />
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

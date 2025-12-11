@@ -4,7 +4,6 @@ import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { useCart } from '@/context/CartContext';
 import { useState, useEffect } from 'react';
-import styles from './Navbar.module.css';
 
 export default function Navbar({ locale }) {
     const t = useTranslations('Navigation');
@@ -26,12 +25,12 @@ export default function Navbar({ locale }) {
     }, [pathname]);
 
     return (
-        <nav className={styles.navbar}>
-            <div className={styles.container}>
-                <div className={styles.leftSection}>
+        <nav className="sticky top-0 z-[100] bg-white/95 backdrop-blur-sm border-b border-black/5 shadow-sm">
+            <div className="max-w-container mx-auto px-4 py-4 flex justify-between items-center">
+                <div className="flex items-center gap-4">
                     {/* Hamburger Button (Mobile Only) */}
                     <button
-                        className={styles.hamburger}
+                        className="flex md:hidden bg-transparent border-none cursor-pointer text-gray-900 p-0"
                         onClick={() => setIsMobileMenuOpen(true)}
                         aria-label="Open Menu"
                     >
@@ -42,20 +41,20 @@ export default function Navbar({ locale }) {
                         </svg>
                     </button>
 
-                    <Link href="/" className={styles.logo}>Scorpio</Link>
+                    <Link href="/" className="font-heading text-2xl font-bold text-primary uppercase tracking-wider">Scorpio</Link>
                 </div>
 
                 {/* Desktop Links */}
-                <div className={styles.desktopLinks}>
-                    <Link href="/shop" className={styles.link}>{t('shop')}</Link>
-                    <Link href="/contact" className={styles.link}>{t('contact')}</Link>
+                <div className="hidden md:flex gap-8 items-center">
+                    <Link href="/shop" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('shop')}</Link>
+                    <Link href="/contact" className="font-medium text-gray-900 text-sm transition-colors duration-200 hover:text-primary">{t('contact')}</Link>
                 </div>
 
-                <div className={styles.rightSection}>
+                <div className="flex items-center gap-6">
                     {/* Simplified Language Switcher */}
                     <button
                         onClick={switchLocale}
-                        className={styles.langSwitch}
+                        className="bg-transparent border border-gray-200 px-2 py-1 rounded text-xs font-semibold cursor-pointer text-gray-900 transition-all duration-200 hover:bg-primary hover:border-primary hover:text-white"
                         title={locale === 'id' ? 'Change to English' : 'Ubah ke Bahasa Indonesia'}
                     >
                         {locale.toUpperCase()}
@@ -63,7 +62,7 @@ export default function Navbar({ locale }) {
 
                     <button
                         onClick={() => setIsOpen(true)}
-                        className={styles.cartButton}
+                        className="relative bg-transparent border-none cursor-pointer text-gray-900 p-0 flex items-center"
                         aria-label="Cart"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -71,17 +70,27 @@ export default function Navbar({ locale }) {
                             <circle cx="20" cy="21" r="1"></circle>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
-                        {totalItems > 0 && <span className={styles.badge}>{totalItems}</span>}
+                        {totalItems > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-[18px] h-[18px] rounded-full flex justify-center items-center font-semibold">
+                                {totalItems}
+                            </span>
+                        )}
                     </button>
                 </div>
             </div>
 
             {/* Mobile Navigation Drawer */}
-            <div className={`${styles.mobileDrawer} ${isMobileMenuOpen ? styles.open : ''}`}>
-                <div className={styles.drawerOverlay} onClick={() => setIsMobileMenuOpen(false)}></div>
-                <div className={styles.drawerContent}>
+            <div className={`fixed inset-0 z-[200] transition-all duration-300 ${isMobileMenuOpen ? 'visible' : 'invisible'}`}>
+                {/* Overlay */}
+                <div
+                    className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                ></div>
+
+                {/* Drawer Content */}
+                <div className={`absolute top-0 left-0 w-[250px] h-full bg-white p-8 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <button
-                        className={styles.closeButton}
+                        className="self-end bg-transparent border-none cursor-pointer text-gray-600 mb-8"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -90,14 +99,14 @@ export default function Navbar({ locale }) {
                         </svg>
                     </button>
 
-                    <div className={styles.drawerLinks}>
-                        <Link href="/" className={styles.drawerLink} onClick={() => setIsMobileMenuOpen(false)}>{t('home')}</Link>
-                        <Link href="/shop" className={styles.drawerLink} onClick={() => setIsMobileMenuOpen(false)}>{t('shop')}</Link>
-                        <Link href="/contact" className={styles.drawerLink} onClick={() => setIsMobileMenuOpen(false)}>{t('contact')}</Link>
+                    <div className="flex flex-col gap-6">
+                        <Link href="/" className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>{t('home')}</Link>
+                        <Link href="/shop" className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>{t('shop')}</Link>
+                        <Link href="/contact" className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>{t('contact')}</Link>
                     </div>
 
-                    <div className={styles.drawerFooter}>
-                        <p style={{ fontSize: '0.8rem', color: '#888' }}>Scorpio Textiles</p>
+                    <div className="mt-auto border-t border-gray-100 pt-4">
+                        <p className="text-xs text-gray-500">Scorpio Textiles</p>
                     </div>
                 </div>
             </div>

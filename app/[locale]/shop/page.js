@@ -3,7 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import SearchBar from '@/components/SearchBar';
 import CategoryFilter from '@/components/CategoryFilter';
 import { products } from '@/lib/products';
-import styles from './ShopPage.module.css';
+
 
 export default async function ShopPage({ params, searchParams }) {
     const { locale } = await params;
@@ -34,30 +34,30 @@ export default async function ShopPage({ params, searchParams }) {
     ];
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div className={styles.titleSection}>
-                    <h1 className={styles.title}>
+        <div className="pt-4 pb-16 max-w-container mx-auto px-4">
+            <div className="flex flex-col gap-4 mb-10">
+                <div className="text-center py-8 max-w-[800px] mx-auto md:py-6">
+                    <h1 className="text-4xl md:text-5xl font-heading text-primary mb-4 leading-tight">
                         {t('title')}
                     </h1>
-                    <p className={styles.description}>
+                    <p className="text-lg md:text-[1.125rem] text-secondary leading-relaxed m-0 opacity-90">
                         {t('description')}
                     </p>
                 </div>
             </div>
 
-            <div className={styles.filterBar}>
+            <div className="sticky top-[80px] z-50 bg-white/95 backdrop-blur-sm p-4 rounded-lg shadow-sm border border-black/5 flex gap-2 items-center flex-nowrap mb-8 md:gap-4 md:flex-wrap">
                 <SearchBar placeholder={locale === 'id' ? 'Cari kain...' : 'Search fabrics...'} />
                 <CategoryFilter categories={categories} locale={locale} />
             </div>
 
-            <div className={styles.productGrid}>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-8">
                 {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
                         <ProductCard key={product.id} product={product} locale={locale} />
                     ))
                 ) : (
-                    <p className={styles.emptyState}>
+                    <p className="col-span-full text-center text-[#666] p-8 text-lg">
                         {locale === 'id' ? 'Tidak ada produk ditemukan' : 'No products found'}
                     </p>
                 )}
