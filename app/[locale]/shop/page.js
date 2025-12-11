@@ -3,6 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import SearchBar from '@/components/SearchBar';
 import CategoryFilter from '@/components/CategoryFilter';
 import { products } from '@/lib/products';
+import styles from './ShopPage.module.css';
 
 export default async function ShopPage({ params, searchParams }) {
     const { locale } = await params;
@@ -31,36 +32,27 @@ export default async function ShopPage({ params, searchParams }) {
     ];
 
     return (
-        <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h1 style={{
-                        fontSize: '2.5rem',
-                        fontFamily: 'var(--font-heading)',
-                        color: 'var(--color-primary)',
-                        margin: 0
-                    }}>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <div className={styles.titleRow}>
+                    <h1 className={styles.title}>
                         {t('shop')}
                     </h1>
                 </div>
-
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <SearchBar placeholder={locale === 'id' ? 'Cari kain...' : 'Search fabrics...'} />
-                    <CategoryFilter categories={categories} locale={locale} />
-                </div>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '2rem'
-            }}>
+            <div className={styles.filterBar}>
+                <SearchBar placeholder={locale === 'id' ? 'Cari kain...' : 'Search fabrics...'} />
+                <CategoryFilter categories={categories} locale={locale} />
+            </div>
+
+            <div className={styles.productGrid}>
                 {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
                         <ProductCard key={product.id} product={product} locale={locale} />
                     ))
                 ) : (
-                    <p style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', padding: '2rem' }}>
+                    <p className={styles.emptyState}>
                         {locale === 'id' ? 'Tidak ada produk ditemukan' : 'No products found'}
                     </p>
                 )}

@@ -1,25 +1,135 @@
 .container {
-    margin-bottom: 2rem;
+    position: relative;
+    width: fit-content;
 }
 
-.select {
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
-    font-size: 1rem;
-    font-family: inherit;
+/* TRIGGER BUTTON */
+.trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: white;
     border: 1px solid #e5e5e5;
     border-radius: 6px;
-    background-color: #fafafa;
+    font-family: inherit;
+    font-size: 0.95rem;
     cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
-    min-width: 200px;
+    transition: all 0.2s;
+    color: var(--color-text);
 }
 
-.select:focus {
-    outline: none;
+.trigger:hover {
+    border-color: #bbb;
+    background: #fafafa;
+}
+
+.trigger.active {
     border-color: var(--color-primary);
-    background-color: white;
+    box-shadow: 0 0 0 2px rgba(138, 28, 28, 0.1);
+}
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    color: #666;
+}
+
+.active .iconWrapper {
+    color: var(--color-primary);
+}
+
+.labelText {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.arrow {
+    display: flex;
+    align-items: center;
+    color: #999;
+    transition: transform 0.2s;
+    margin-left: 0.5rem;
+}
+
+/* DROPDOWN MENU */
+.dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 200px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    list-style: none;
+    z-index: 1000;
+    animation: fadeIn 0.15s ease-out;
+}
+
+.option {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.option:hover {
+    background: #f5f5f5;
+    color: var(--color-primary);
+}
+
+.option.selected {
+    background: #fff0f0;
+    /* Light crimson tint */
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .trigger {
+        padding: 0.75rem;
+        /* Square-ish aspect ratio logic handled by content */
+        justify-content: center;
+        width: 42px;
+        /* Fixed width for icon only look */
+        height: 42px;
+    }
+
+    .labelText {
+        display: none;
+        /* Hide text on mobile */
+    }
+
+    .arrow {
+        display: none;
+        /* Hide arrow on mobile */
+    }
+
+    .iconWrapper {
+        color: var(--color-primary);
+        /* Make icon prominent on mobile */
+    }
+
+    .dropdown {
+        right: auto;
+        left: 0;
+        /* Align left or modify as needed for mobile */
+    }
 }
