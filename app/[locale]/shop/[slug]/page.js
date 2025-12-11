@@ -4,9 +4,19 @@ import { notFound } from 'next/navigation';
 import styles from './ProductDetail.module.css';
 
 export async function generateStaticParams() {
-    return products.map((product) => ({
-        slug: product.id
-    }));
+    const locales = ['en', 'id'];
+    const params = [];
+
+    for (const locale of locales) {
+        for (const product of products) {
+            params.push({
+                locale: locale,
+                slug: product.id
+            });
+        }
+    }
+
+    return params;
 }
 
 export default async function ProductPage({ params }) {
