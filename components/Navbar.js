@@ -42,7 +42,19 @@ export default function Navbar({ locale }) {
                             </svg>
                         </button>
 
-                        <Link href="/" className="font-heading text-2xl font-bold text-primary uppercase tracking-wider">Scorpio</Link>
+                        {/* Logo */}
+                        <Link href="/" className="flex items-center gap-2 group">
+                            {/* Scorpion Icon */}
+                            <img
+                                src="/images/scorpion.png"
+                                alt="Scorpio"
+                                className="h-7 w-7 transition-transform group-hover:scale-110"
+                            />
+
+                            <span className="font-heading text-2xl font-bold text-primary tracking-wide">
+                                SCORPIO
+                            </span>
+                        </Link>
                     </div>
 
                     {/* Desktop Links */}
