@@ -7,9 +7,14 @@
   "Navigation": {
     "home": "Beranda",
     "shop": "Belanja",
-    "contact": "Kontak",
+    "contact": "Hubungi Kami",
     "cart": "Keranjang",
-    "paymentDelivery": "Pembayaran & Pengiriman"
+    "paymentDelivery": "Cara Pembayaran & Pengiriman",
+    "emptyCart": "Keranjang Anda kosong",
+    "returnToShop": "Kembali Belanja",
+    "total": "Total",
+    "change": "Ubah",
+    "done": "Selesai"
   },
   "PaymentDelivery": {
     "title": "Metode Pembayaran & Pengiriman",
@@ -56,6 +61,7 @@
     "subtotal": "Subtotal",
     "total": "Total",
     "emptyCart": "Keranjang Anda kosong",
-    "returnToShop": "Kembali Belanja"
+    "returnToShop": "Kembali Belanja",
+    "changeOrder": "Ubah Pesanan"
   }
 }

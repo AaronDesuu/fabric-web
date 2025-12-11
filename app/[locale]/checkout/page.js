@@ -214,7 +214,16 @@ export default function CheckoutPage({ params }) {
                 {/* Right Column: Order Summary */}
                 <div>
                     <div className="bg-gray-50 p-6 md:p-8 rounded-lg border border-gray-200 sticky top-[160px]">
-                        <h2 className="text-xl font-bold mb-6 text-gray-900">{t('orderSummary')}</h2>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-bold text-gray-900 m-0">{t('orderSummary')}</h2>
+                            <button
+                                type="button"
+                                onClick={() => router.push('/shop?openCart=true')}
+                                className="text-sm font-semibold text-primary hover:text-[#5c1313] underline bg-transparent border-none cursor-pointer transition-colors"
+                            >
+                                {t('changeOrder')}
+                            </button>
+                        </div>
 
                         <div className="max-h-[300px] overflow-y-auto mb-6 pr-2">
                             {cart.map((item) => (

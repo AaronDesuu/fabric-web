@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import ProductCard from '@/components/ProductCard';
 import SearchBar from '@/components/SearchBar';
 import CategoryFilter from '@/components/CategoryFilter';
+import AutoOpenCart from '@/components/AutoOpenCart';
 import { products } from '@/lib/products';
 
 
@@ -62,6 +63,7 @@ export default async function ShopPage({ params, searchParams }) {
                     </p>
                 )}
             </div>
+            <AutoOpenCart />
         </div>
     );
 }

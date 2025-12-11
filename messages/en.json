@@ -9,7 +9,12 @@
     "shop": "Shop",
     "contact": "Contact",
     "cart": "Cart",
-    "paymentDelivery": "Payment & Delivery"
+    "paymentDelivery": "Payment & Delivery",
+    "emptyCart": "Your cart is empty",
+    "returnToShop": "Return to Shop",
+    "total": "Total",
+    "change": "Change",
+    "done": "Done"
   },
   "PaymentDelivery": {
     "title": "Payment & Delivery Methods",
@@ -56,6 +61,7 @@
     "subtotal": "Subtotal",
     "total": "Total",
     "emptyCart": "Your cart is empty",
-    "returnToShop": "Return to Shop"
+    "returnToShop": "Return to Shop",
+    "changeOrder": "Change Order"
   }
 }
