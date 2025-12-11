@@ -60,13 +60,13 @@ export default function CartSidebar({ locale }) {
                                     </div>
                                     <div className={styles.controls}>
                                         <div className={styles.qtyGroup}>
-                                            <button onClick={() => changeQuantity(item, -1)} title="-1m">-1</button>
-                                            <button onClick={() => changeQuantity(item, -0.25)} title="-0.25m">-0.25</button>
+                                            <button onClick={() => changeQuantity(item, -1)} title="-1m" className={styles.btnMain}>-1</button>
+                                            <button onClick={() => changeQuantity(item, -0.25)} title="-0.25m" className={styles.btnSub}>-0.25</button>
                                         </div>
                                         <span className={styles.qtyDisplay}>{item.quantity}m</span>
                                         <div className={styles.qtyGroup}>
-                                            <button onClick={() => changeQuantity(item, 0.25)} title="+0.25m">+0.25</button>
-                                            <button onClick={() => changeQuantity(item, 1)} title="+1m">+1</button>
+                                            <button onClick={() => changeQuantity(item, 0.25)} title="+0.25m" className={styles.btnSub}>+0.25</button>
+                                            <button onClick={() => changeQuantity(item, 1)} title="+1m" className={styles.btnMain}>+1</button>
                                         </div>
                                         <button
                                             onClick={() => setItemToRemove(item.id)}

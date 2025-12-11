@@ -22,20 +22,51 @@
 }
 
 .qtyBtn {
-    background: #f5f5f5;
     border: none;
-    padding: 0.5rem 0.25rem;
     cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-primary);
-    transition: background 0.2s;
-    min-width: 40px;
-    border-radius: 2px;
+    background: transparent;
+    transition: all 0.2s;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .qtyBtn:hover {
-    background: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+.qtyBtnMain {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    min-width: 45px;
+    background: var(--color-secondary);
+    /* Midnight Blue */
+    color: white;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2);
+}
+
+.qtyBtnMain:hover {
+    background: #1e293b;
+    /* Slightly lighter midnight blue */
+    box-shadow: 0 4px 6px rgba(15, 23, 42, 0.3);
+}
+
+.qtyBtnSub {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 35px;
+    background: #f1f5f9;
+    /* Slate 100 */
+    color: var(--color-secondary);
+    border: 1px solid #e2e8f0;
+}
+
+.qtyBtnSub:hover {
+    background: #e2e8f0;
+    color: var(--color-primary);
 }
 
 .qtyInput {

@@ -26,8 +26,8 @@ export default function AddToCart({ product, label }) {
         <div className={styles.container}>
             <div className={styles.quantityControl}>
                 <div className={styles.buttonGroup}>
-                    <button onClick={() => updateQuantity(-1)} className={styles.qtyBtn} title="-1m">-1</button>
-                    <button onClick={() => updateQuantity(-0.25)} className={styles.qtyBtn} title="-0.25m">-0.25</button>
+                    <button onClick={() => updateQuantity(-1)} className={`${styles.qtyBtn} ${styles.qtyBtnMain}`} title="-1m">-1</button>
+                    <button onClick={() => updateQuantity(-0.25)} className={`${styles.qtyBtn} ${styles.qtyBtnSub}`} title="-0.25m">-0.25</button>
                 </div>
 
                 <input
@@ -40,8 +40,8 @@ export default function AddToCart({ product, label }) {
                 />
 
                 <div className={styles.buttonGroup}>
-                    <button onClick={() => updateQuantity(0.25)} className={styles.qtyBtn} title="+0.25m">+0.25</button>
-                    <button onClick={() => updateQuantity(1)} className={styles.qtyBtn} title="+1m">+1</button>
+                    <button onClick={() => updateQuantity(0.25)} className={`${styles.qtyBtn} ${styles.qtyBtnSub}`} title="+0.25m">+0.25</button>
+                    <button onClick={() => updateQuantity(1)} className={`${styles.qtyBtn} ${styles.qtyBtnMain}`} title="+1m">+1</button>
                 </div>
             </div>
             <button
