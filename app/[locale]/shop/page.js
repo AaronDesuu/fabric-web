@@ -35,7 +35,7 @@ export default async function ShopPage({ params, searchParams }) {
     ];
 
     return (
-        <div className="pt-4 pb-16 max-w-container mx-auto px-4">
+        <div className="pt-4 pb-24 md:pb-16 max-w-container mx-auto px-4">
             <div className="flex flex-col gap-4 mb-10">
                 <div className="text-center py-8 max-w-[800px] mx-auto md:py-6">
                     <h1 className="text-4xl md:text-5xl font-heading text-primary mb-4 leading-tight">
@@ -52,7 +52,7 @@ export default async function ShopPage({ params, searchParams }) {
                 <CategoryFilter categories={categories} locale={locale} />
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-8">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-8 mb-8">
                 {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
                         <ProductCard key={product.id} product={product} locale={locale} />

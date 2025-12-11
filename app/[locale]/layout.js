@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import CartSidebar from '@/components/CartSidebar';
 import { CartProvider } from '@/context/CartContext';
 import { NextIntlClientProvider } from 'next-intl';
@@ -33,6 +34,7 @@ export default async function LocaleLayout({ children, params }) {
             <Navbar locale={locale} />
             <CartSidebar locale={locale} />
             {children}
+            <Footer />
           </CartProvider>
         </NextIntlClientProvider>
         <Analytics />

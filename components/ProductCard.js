@@ -2,15 +2,23 @@
 
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
+import { useCart } from '@/context/CartContext';
 
 export default function ProductCard({ product, locale }) {
     const t = useTranslations('Product');
+    const { addToCart } = useCart();
 
     // Format price in IDR
     const price = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR'
     }).format(product.price);
+
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addToCart(product, 1);
+    };
 
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-sm transition-all duration-200 relative hover:-translate-y-1 hover:shadow-lg group" title={`${product.name[locale]} - ${price}`}>
@@ -20,6 +28,19 @@ export default function ProductCard({ product, locale }) {
                     <span className="font-heading text-base font-semibold">{product.name[locale]}</span>
                     <span className="text-sm text-[#ffd700]">{price} / m</span>
                 </div>
+
+                {/* Add to Cart Button - appears on hover */}
+                <button
+                    onClick={handleAddToCart}
+                    className="absolute top-3 right-3 h-10 w-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:bg-[#5c1313] hover:scale-110 z-10"
+                    title={t('addToCart') || 'Add to Cart'}
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
             </Link>
             {/* Hidden info block, kept in code but hidden as per original CSS */}
             <div className="hidden p-6">

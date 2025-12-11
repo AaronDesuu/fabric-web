@@ -16,6 +16,15 @@
     "change": "Ubah",
     "done": "Selesai"
   },
+  "Hero": {
+    "title": "Kain Premium",
+    "subtitle": "Tekstil indah untuk kreasi Anda",
+    "cta": "Belanja Sekarang"
+  },
+  "Home": {
+    "featuredTitle": "Produk Pilihan",
+    "featuredSubtitle": "Temukan pilihan kain premium kami yang terbaik"
+  },
   "PaymentDelivery": {
     "title": "Metode Pembayaran & Pengiriman",
     "paymentTitle": "Metode Pembayaran",

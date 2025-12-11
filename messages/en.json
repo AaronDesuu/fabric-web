@@ -16,6 +16,15 @@
     "change": "Change",
     "done": "Done"
   },
+  "Hero": {
+    "title": "Premium Fabrics",
+    "subtitle": "Beautiful textiles for your creations",
+    "cta": "Shop Now"
+  },
+  "Home": {
+    "featuredTitle": "Featured Products",
+    "featuredSubtitle": "Discover our handpicked selection of premium fabrics"
+  },
   "PaymentDelivery": {
     "title": "Payment & Delivery Methods",
     "paymentTitle": "Payment Methods",

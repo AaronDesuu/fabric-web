@@ -23,6 +23,41 @@ module.exports = {
             maxWidth: {
                 'container': '1200px',
             },
+            keyframes: {
+                fadeInUp: {
+                    '0%': {
+                        opacity: '0',
+                        transform: 'translateY(30px)',
+                    },
+                    '100%': {
+                        opacity: '1',
+                        transform: 'translateY(0)',
+                    },
+                },
+                float: {
+                    '0%, 100%': {
+                        transform: 'translateY(0px)',
+                    },
+                    '50%': {
+                        transform: 'translateY(-10px)',
+                    },
+                },
+                slideInFromLeft: {
+                    '0%': {
+                        opacity: '0',
+                        transform: 'translateX(-100px)',
+                    },
+                    '100%': {
+                        opacity: '1',
+                        transform: 'translateX(0)',
+                    },
+                },
+            },
+            animation: {
+                fadeInUp: 'fadeInUp 1s ease-out forwards',
+                float: 'float 3s ease-in-out infinite',
+                slideInFromLeft: 'slideInFromLeft 0.8s ease-out forwards',
+            },
         },
     },
     plugins: [],
