@@ -113,7 +113,14 @@ export default function CartSidebar({ locale }) {
                             <span>Total:</span>
                             <span className="text-primary">{formatPrice(total)}</span>
                         </div>
-                        <button className="w-full p-4 bg-primary text-white border-none text-base cursor-pointer disabled:bg-[#ccc] disabled:cursor-not-allowed hover:bg-[#5c1313] transition-colors font-semibold uppercase tracking-wider" disabled={cart.length === 0}>
+                        <button
+                            onClick={() => {
+                                setIsOpen(false);
+                                window.location.href = `/${locale}/checkout`;
+                            }}
+                            className="w-full p-4 bg-primary text-white border-none text-base cursor-pointer disabled:bg-[#ccc] disabled:cursor-not-allowed hover:bg-[#5c1313] transition-colors font-semibold uppercase tracking-wider"
+                            disabled={cart.length === 0}
+                        >
                             Checkout
                         </button>
                     </div>

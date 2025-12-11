@@ -40,5 +40,22 @@
   },
   "Product": {
     "perMeter": "/ meter"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "contactDetails": "Detail Kontak",
+    "shippingAddress": "Alamat Pengiriman",
+    "paymentMethod": "Metode Pembayaran",
+    "deliveryMethod": "Metode Pengiriman",
+    "orderSummary": "Ringkasan Pesanan",
+    "placeOrder": "Pesan via WhatsApp",
+    "name": "Nama Lengkap",
+    "whatsapp": "Nomor WhatsApp",
+    "address": "Alamat Lengkap",
+    "notes": "Catatan (Opsional)",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "emptyCart": "Keranjang Anda kosong",
+    "returnToShop": "Kembali Belanja"
   }
 }

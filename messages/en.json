@@ -40,5 +40,22 @@
   },
   "Product": {
     "perMeter": "/ meter"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "contactDetails": "Contact Details",
+    "shippingAddress": "Shipping Address",
+    "paymentMethod": "Payment Method",
+    "deliveryMethod": "Delivery Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order via WhatsApp",
+    "name": "Full Name",
+    "whatsapp": "WhatsApp Number",
+    "address": "Full Address",
+    "notes": "Notes (Optional)",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "emptyCart": "Your cart is empty",
+    "returnToShop": "Return to Shop"
   }
 }
