@@ -1,0 +1,23 @@
+{
+  "HomePage": {
+    "title": "Premium Fabrics",
+    "subtitle": "Exquisite textiles for your creations",
+    "cta": "Shop Now"
+  },
+  "Navigation": {
+    "home": "Home",
+    "shop": "Shop",
+    "contact": "Contact",
+    "cart": "Cart"
+  },
+  "Contact": {
+    "title": "Contact Us",
+    "aboutTitle": "About Scorpio Textiles",
+    "aboutText": "Scorpio Textiles is a premium fabric provider based in Jakarta. We specialize in high-quality materials including Silk, Cotton, Linen, and Velvet. Our mission is to provide the finest fabrics for fashion designers, tailors, and textile enthusiasts across Indonesia and beyond.",
+    "infoTitle": "Shop Information",
+    "addressLabel": "Address"
+  },
+  "Product": {
+    "perMeter": "/ meter"
+  }
+}

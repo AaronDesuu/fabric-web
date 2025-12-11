@@ -1,0 +1,23 @@
+{
+  "HomePage": {
+    "title": "Kain Premium",
+    "subtitle": "Tekstil indah untuk kreasi Anda",
+    "cta": "Belanja Sekarang"
+  },
+  "Navigation": {
+    "home": "Beranda",
+    "shop": "Belanja",
+    "contact": "Kontak",
+    "cart": "Keranjang"
+  },
+  "Contact": {
+    "title": "Hubungi Kami",
+    "aboutTitle": "Tentang Scorpio Textiles",
+    "aboutText": "Scorpio Textiles adalah penyedia kain premium yang berbasis di Jakarta. Kami mengkhususkan diri dalam bahan berkualitas tinggi termasuk Sutra, Katun, Linen, dan Beludru. Misi kami adalah menyediakan kain terbaik bagi perancang busana, penjahit, dan penggemar tekstil di seluruh Indonesia dan sekitarnya.",
+    "infoTitle": "Informasi Toko",
+    "addressLabel": "Alamat"
+  },
+  "Product": {
+    "perMeter": "/ meter"
+  }
+}
