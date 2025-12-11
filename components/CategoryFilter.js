@@ -46,13 +46,13 @@ export default function CategoryFilter({ categories, locale }) {
             params.delete('category');
         }
 
-        replace(`${pathname}?${params.toString()}`);
+        replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
     const clearAll = () => {
         const params = new URLSearchParams(searchParams);
         params.delete('category');
-        replace(`${pathname}?${params.toString()}`);
+        replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
     const getLabel = () => {
@@ -98,17 +98,17 @@ export default function CategoryFilter({ categories, locale }) {
 
             {isOpen && (
                 <div className={styles.dropdown}>
-                    <div className={styles.dropdownHeader}>
-                        <span className={styles.dropdownTitle}>
-                            {locale === 'id' ? 'Filter Kategori' : 'Filter Categories'}
-                        </span>
-                        {selectedCategories.length > 0 && (
-                            <button className={styles.clearBtn} onClick={clearAll}>
-                                {locale === 'id' ? 'Hapus Semua' : 'Clear All'}
-                            </button>
-                        )}
-                    </div>
-                    <ul className={styles.optionList}>
+                        <div className={styles.dropdownHeader}>
+                            <span className={styles.dropdownTitle}>
+                                {locale === 'id' ? 'Filter Kategori' : 'Filter Categories'}
+                            </span>
+                            {selectedCategories.length > 0 && (
+                                <button className={styles.clearBtn} onClick={clearAll}>
+                                    {locale === 'id' ? 'Hapus Semua' : 'Clear All'}
+                                </button>
+                            )}
+                        </div>
+                        <ul className={styles.optionList}>
                         {categories.map((cat) => (
                             <li
                                 key={cat.value}

@@ -196,33 +196,44 @@
 
 /* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
+    .container {
+        position: static;
+    }
+
     .trigger {
         padding: 0.75rem;
-        /* Square-ish aspect ratio logic handled by content */
         justify-content: center;
         width: 42px;
-        /* Fixed width for icon only look */
         height: 42px;
     }
 
     .labelText {
         display: none;
-        /* Hide text on mobile */
     }
 
     .arrow {
         display: none;
-        /* Hide arrow on mobile */
     }
 
     .iconWrapper {
         color: var(--color-primary);
-        /* Make icon prominent on mobile */
     }
 
     .dropdown {
-        right: auto;
-        left: 0;
-        /* Align left or modify as needed for mobile */
+        position: fixed;
+        right: 1rem;
+        left: 1rem;
+        top: auto;
+        min-width: auto;
+        width: auto;
+        max-width: none;
+    }
+
+    .dropdownHeader {
+        padding: 0.875rem 1rem;
+    }
+
+    .checkboxLabel {
+        padding: 0.875rem 1rem;
     }
 }
