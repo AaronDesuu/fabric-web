@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }) {
             <DashboardSidebar currentUser={user} adminData={admin} />
 
             {/* Main Content */}
-            <main className="lg:ml-64 pt-20 lg:pt-0 p-4 lg:p-8">
+            <main className="lg:ml-64 pt-24 lg:pt-6 px-4 lg:px-8 pb-8">
                 {children}
             </main>
         </div>

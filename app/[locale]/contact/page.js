@@ -1,8 +1,15 @@
 import { getTranslations } from 'next-intl/server';
+import { getShopSettings } from '@/lib/supabase/settings';
 
 export default async function ContactPage({ params }) {
     const { locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'Contact' });
+    const [t, { settings }] = await Promise.all([
+        getTranslations({ locale, namespace: 'Contact' }),
+        getShopSettings()
+    ]);
+
+    const whatsappNumber = settings?.whatsapp_number || '6281234567890';
+    const whatsappDisplay = `+${whatsappNumber.substring(0, 2)} ${whatsappNumber.substring(2, 5)} ${whatsappNumber.substring(5, 9)} ${whatsappNumber.substring(9)}`;
 
     return (
         <div className="pt-16 pb-16 max-w-[800px] mx-auto px-4">
@@ -12,7 +19,7 @@ export default async function ContactPage({ params }) {
 
             <div className="bg-white p-8 rounded-lg shadow-sm mb-8 border border-black/5">
                 <a
-                    href="https://wa.me/6281234567890"
+                    href={`https://wa.me/${whatsappNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 px-6 rounded-lg transition-all mb-8 w-full md:w-fit shadow-sm group"
@@ -49,7 +56,7 @@ export default async function ContactPage({ params }) {
 
                     <div className="flex items-center gap-4">
                         <span className="font-semibold min-w-[100px]">WhatsApp:</span>
-                        <span>+62 812 3456 7890</span>
+                        <span>{whatsappDisplay}</span>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartSidebar from '@/components/CartSidebar';
 import { CartProvider } from '@/context/CartContext';
+import { SettingsProvider } from '@/context/SettingsContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -31,17 +32,25 @@ export default async function LocaleLayout({ children, params }) {
 
   // Providing all messages to the client
   // side is the easiest way to get started
+  // Providing all messages to the client
+  // side is the easiest way to get started
   const messages = await getMessages();
+
+  // Fetch shop settings
+  const { getShopSettings } = await import('@/lib/supabase/settings');
+  const { settings } = await getShopSettings();
 
   return (
     <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
           <CartProvider>
-            <Navbar locale={locale} />
-            <CartSidebar locale={locale} />
-            {children}
-            <Footer />
+            <SettingsProvider initialSettings={settings}>
+              <Navbar locale={locale} />
+              <CartSidebar locale={locale} />
+              {children}
+              <Footer />
+            </SettingsProvider>
           </CartProvider>
         </NextIntlClientProvider>
         <Analytics />
