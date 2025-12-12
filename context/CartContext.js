@@ -7,26 +7,33 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
     const [cart, setCart] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     // Load cart from localStorage
     useEffect(() => {
         const savedCart = localStorage.getItem('fabric_cart');
         if (savedCart) {
-            const parsed = JSON.parse(savedCart);
-            // Migrate old items to have cartItemId
-            const migrated = parsed.map(item => ({
-                ...item,
-                cartItemId: item.cartItemId || item.id,
-                variant: item.variant || null
-            }));
-            setCart(migrated);
+            try {
+                const parsed = JSON.parse(savedCart);
+                // Migrate old items to have cartItemId
+                const migrated = parsed.map(item => ({
+                    ...item,
+                    cartItemId: item.cartItemId || item.id,
+                    variant: item.variant || null
+                }));
+                setCart(migrated);
+            } catch (e) {
+                console.error('Failed to parse cart:', e);
+            }
         }
+        setIsInitialized(true);
     }, []);
 
     // Save cart to localStorage
     useEffect(() => {
+        if (!isInitialized) return;
         localStorage.setItem('fabric_cart', JSON.stringify(cart));
-    }, [cart]);
+    }, [cart, isInitialized]);
 
     const addToCart = (product, quantity = 1, variant = null) => {
         setCart((prev) => {

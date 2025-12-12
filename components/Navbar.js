@@ -14,7 +14,7 @@ export default function Navbar({ locale }) {
 
     const switchLocale = () => {
         const newLocale = locale === 'en' ? 'id' : 'en';
-        router.replace(pathname, { locale: newLocale });
+        router.replace(pathname, { locale: newLocale, scroll: false });
     };
 
     const totalItems = cart ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;

@@ -9,10 +9,17 @@ import { routing } from '@/i18n/routing';
 import { Analytics } from '@vercel/analytics/react';
 import "../globals.css";
 
-export const metadata = {
-  title: "Fabric Shop",
-  description: "Premium Fabric Store",
-};
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+
+  return {
+    title: locale === 'id' ? 'Toko Kain Scorpio' : "Scorpio Fabric's",
+    description: locale === 'id' ? 'Toko Kain Premium' : "Premium Fabric Store",
+    icons: {
+      icon: '/images/logo.jpg',
+    },
+  };
+}
 
 export default async function LocaleLayout({ children, params }) {
   const { locale } = await params;
