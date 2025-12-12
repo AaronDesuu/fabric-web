@@ -7,7 +7,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { products } from '../lib/products.js';
+import { products } from '../lib/products.legacy.js';
 
 // Load environment variables
 import dotenv from 'dotenv';
