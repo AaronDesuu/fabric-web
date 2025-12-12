@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { uploadImage, generateUniqueFileName } from '@/lib/supabase/storage';
 
-const categories = [
+const initialCategories = [
     { value: 'cotton', label: 'Cotton' },
     { value: 'silk', label: 'Silk' },
     { value: 'linen', label: 'Linen' },
@@ -16,10 +16,16 @@ const categories = [
 export default function NewProductPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [translating, setTranslating] = useState({ name: false, description: false });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const translationTimeoutRef = useRef({ name: null, description: null });
+
+    const [categories, setCategories] = useState(initialCategories);
+    const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
+    const [newCategory, setNewCategory] = useState('');
 
     const [formData, setFormData] = useState({
         name_en: '',
@@ -33,13 +39,141 @@ export default function NewProductPage() {
         active: true,
     });
 
+    // Auto-translate function using Google Translate API (free tier)
+    const translateText = async (text, field) => {
+        if (!text || text.trim() === '') return '';
+
+        try {
+            const response = await fetch(
+                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=id&tl=en&dt=t&q=${encodeURIComponent(text)}`
+            );
+            const data = await response.json();
+            return data[0][0][0];
+        } catch (err) {
+            console.error('Translation error:', err);
+            return '';
+        }
+    };
+
+    // Handle Indonesian input changes with auto-translation
+    const handleIndonesianChange = async (e, field) => {
+        const { value } = e.target;
+        const idField = field === 'name' ? 'name_id' : 'description_id';
+        const enField = field === 'name' ? 'name_en' : 'description_en';
+
+        // Update Indonesian field immediately
+        setFormData(prev => ({
+            ...prev,
+            [idField]: value
+        }));
+
+        // Clear existing timeout
+        if (translationTimeoutRef.current[field]) {
+            clearTimeout(translationTimeoutRef.current[field]);
+        }
+
+        // Set new timeout for auto-translation (1 second after user stops typing)
+        if (value.trim()) {
+            translationTimeoutRef.current[field] = setTimeout(async () => {
+                setTranslating(prev => ({ ...prev, [field]: true }));
+                const translated = await translateText(value, field);
+                if (translated) {
+                    setFormData(prev => ({
+                        ...prev,
+                        [enField]: translated
+                    }));
+                }
+                setTranslating(prev => ({ ...prev, [field]: false }));
+            }, 1000);
+        }
+    };
+
+    // Manual translation button handler
+    const handleManualTranslate = async (field) => {
+        const idField = field === 'name' ? 'name_id' : 'description_id';
+        const enField = field === 'name' ? 'name_en' : 'description_en';
+
+        if (!formData[idField] || formData[idField].trim() === '') return;
+
+        setTranslating(prev => ({ ...prev, [field]: true }));
+        const translated = await translateText(formData[idField], field);
+        if (translated) {
+            setFormData(prev => ({
+                ...prev,
+                [enField]: translated
+            }));
+        }
+        setTranslating(prev => ({ ...prev, [field]: false }));
+    };
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
+        // If selecting "add_new" in category dropdown, show input
+        if (name === 'category' && value === 'add_new') {
+            setShowNewCategoryInput(true);
+            return;
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
     };
+
+    // Handle adding a new category
+    const handleAddCategory = () => {
+        if (!newCategory || newCategory.trim() === '') return;
+
+        const categoryValue = newCategory.toLowerCase().replace(/\s+/g, '_');
+        const categoryLabel = newCategory.trim();
+
+        // Check if category already exists
+        if (categories.some(cat => cat.value === categoryValue)) {
+            setError('Category already exists');
+            setTimeout(() => setError(''), 3000);
+            return;
+        }
+
+        // Add new category to the list
+        const newCat = { value: categoryValue, label: categoryLabel };
+        setCategories(prev => [...prev, newCat]);
+
+        // Set as selected category
+        setFormData(prev => ({
+            ...prev,
+            category: categoryValue
+        }));
+
+        // Reset
+        setNewCategory('');
+        setShowNewCategoryInput(false);
+    };
+
+    // Cancel adding new category
+    const handleCancelNewCategory = () => {
+        setNewCategory('');
+        setShowNewCategoryInput(false);
+        // Reset to first category if no category was selected
+        if (!formData.category || formData.category === 'add_new') {
+            setFormData(prev => ({
+                ...prev,
+                category: categories[0].value
+            }));
+        }
+    };
+
+    // Cleanup timeouts on unmount
+    useEffect(() => {
+        return () => {
+            if (translationTimeoutRef.current.name) {
+                clearTimeout(translationTimeoutRef.current.name);
+            }
+            if (translationTimeoutRef.current.description) {
+                clearTimeout(translationTimeoutRef.current.description);
+            }
+        };
+    }, []);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -156,14 +290,53 @@ export default function NewProductPage() {
                         <div className="p-6 space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Name (English) *
+                                    Name (Indonesian) *
                                 </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        name="name_id"
+                                        value={formData.name_id}
+                                        onChange={(e) => handleIndonesianChange(e, 'name')}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="e.g., Sutra Merah Premium"
+                                        required
+                                    />
+                                    {translating.name && (
+                                        <div className="absolute right-3 top-2.5">
+                                            <svg className="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">Auto-translates to English after you stop typing</p>
+                            </div>
+
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Name (English) *
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleManualTranslate('name')}
+                                        disabled={!formData.name_id || translating.name}
+                                        className="text-xs text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
+                                    >
+                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                        </svg>
+                                        Translate
+                                    </button>
+                                </div>
                                 <input
                                     type="text"
                                     name="name_en"
                                     value={formData.name_en}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                                     placeholder="e.g., Premium Red Silk"
                                     required
                                 />
@@ -171,44 +344,53 @@ export default function NewProductPage() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Name (Indonesian) *
+                                    Description (Indonesian)
                                 </label>
-                                <input
-                                    type="text"
-                                    name="name_id"
-                                    value={formData.name_id}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="e.g., Sutra Merah Premium"
-                                    required
-                                />
+                                <div className="relative">
+                                    <textarea
+                                        name="description_id"
+                                        value={formData.description_id}
+                                        onChange={(e) => handleIndonesianChange(e, 'description')}
+                                        rows="4"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Deskripsi produk dalam Bahasa Indonesia..."
+                                    />
+                                    {translating.description && (
+                                        <div className="absolute right-3 top-2.5">
+                                            <svg className="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">Auto-translates to English after you stop typing</p>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Description (English)
-                                </label>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Description (English)
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleManualTranslate('description')}
+                                        disabled={!formData.description_id || translating.description}
+                                        className="text-xs text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
+                                    >
+                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                        </svg>
+                                        Translate
+                                    </button>
+                                </div>
                                 <textarea
                                     name="description_en"
                                     value={formData.description_en}
                                     onChange={handleChange}
                                     rows="4"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                                     placeholder="Product description in English..."
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Description (Indonesian)
-                                </label>
-                                <textarea
-                                    name="description_id"
-                                    value={formData.description_id}
-                                    onChange={handleChange}
-                                    rows="4"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Deskripsi produk dalam Bahasa Indonesia..."
                                 />
                             </div>
                         </div>
@@ -242,19 +424,60 @@ export default function NewProductPage() {
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Category *
                                     </label>
-                                    <select
-                                        name="category"
-                                        value={formData.category}
-                                        onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    >
-                                        {categories.map(cat => (
-                                            <option key={cat.value} value={cat.value}>
-                                                {cat.label}
+                                    {showNewCategoryInput ? (
+                                        <div className="space-y-2">
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={newCategory}
+                                                    onChange={(e) => setNewCategory(e.target.value)}
+                                                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCategory())}
+                                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                    placeholder="Enter new category name"
+                                                    autoFocus
+                                                />
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAddCategory}
+                                                    className="flex-1 inline-flex items-center justify-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                                                >
+                                                    <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    Add Category
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleCancelNewCategory}
+                                                    className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <select
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            required
+                                        >
+                                            {categories.map(cat => (
+                                                <option key={cat.value} value={cat.value}>
+                                                    {cat.label}
+                                                </option>
+                                            ))}
+                                            <option value="add_new" className="text-blue-600 font-medium">
+                                                + Add New Category
                                             </option>
-                                        ))}
-                                    </select>
+                                        </select>
+                                    )}
                                 </div>
 
                                 <div>
