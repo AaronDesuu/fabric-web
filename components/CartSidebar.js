@@ -7,6 +7,7 @@ import ConfirmationModal from './ConfirmationModal';
 
 export default function CartSidebar({ locale }) {
     const t = useTranslations('Navigation');
+    const tProduct = useTranslations('Product');
     const { cart, isOpen, setIsOpen, removeFromCart, updateQuantity } = useCart();
     const [itemToRemove, setItemToRemove] = useState(null);
     const [editingItemId, setEditingItemId] = useState(null);
@@ -32,9 +33,9 @@ export default function CartSidebar({ locale }) {
     const changeQuantity = (item, amount) => {
         const newQty = item.quantity + amount;
         if (newQty >= 1) {
-            updateQuantity(item.id, newQty);
+            updateQuantity(item.cartItemId, newQty);
         } else {
-            setItemToRemove(item.id);
+            setItemToRemove(item.cartItemId);
         }
     };
 
@@ -67,98 +68,116 @@ export default function CartSidebar({ locale }) {
                             </div>
                         ) : (
                             cart.map((item) => (
-                                <div key={item.id} className="flex flex-col gap-3 mb-6 p-4 rounded-lg bg-slate-50 border border-slate-200 transition-all hover:shadow-sm">
-                                    <div className="flex justify-between items-start">
-                                        <h4 className="text-base text-secondary font-semibold m-0 leading-snug">{item.name[locale] || item.name['en']}</h4>
-                                        <p className="text-primary font-semibold text-[0.95rem] m-0 shrink-0 ml-2">{formatPrice(item.price)}</p>
-                                    </div>
-                                    <div className="w-full">
-                                        {editingItemId === item.id ? (
-                                            <div className="flex flex-col gap-3 animate-fadeIn">
-                                                {/* Increment Controls */}
-                                                <div className="flex items-center justify-between gap-1 bg-white p-1.5 rounded-lg border border-slate-300 shadow-sm w-full">
-                                                    <button
-                                                        onClick={() => changeQuantity(item, -1)}
-                                                        title="-1m"
-                                                        className="h-8 flex-1 min-w-[32px] px-0 text-sm font-bold text-white bg-secondary border-none rounded-md cursor-pointer transition-all hover:bg-slate-800 hover:-translate-y-px active:translate-y-0"
-                                                    >
-                                                        −1
-                                                    </button>
-                                                    <button
-                                                        onClick={() => changeQuantity(item, -0.25)}
-                                                        title="-0.25m"
-                                                        className="h-7 flex-1 min-w-[36px] px-0 text-[10px] font-semibold text-secondary bg-slate-50 border border-slate-200 rounded-md cursor-pointer transition-all hover:bg-secondary hover:text-white hover:border-secondary active:scale-95"
-                                                    >
-                                                        −.25
-                                                    </button>
-                                                    <span className="font-bold min-w-[48px] text-center text-[0.95rem] text-secondary tabular-nums">{item.quantity}m</span>
-                                                    <button
-                                                        onClick={() => changeQuantity(item, 0.25)}
-                                                        title="+0.25m"
-                                                        className="h-7 flex-1 min-w-[36px] px-0 text-[10px] font-semibold text-secondary bg-slate-50 border border-slate-200 rounded-md cursor-pointer transition-all hover:bg-secondary hover:text-white hover:border-secondary active:scale-95"
-                                                    >
-                                                        +.25
-                                                    </button>
-                                                    <button
-                                                        onClick={() => changeQuantity(item, 1)}
-                                                        title="+1m"
-                                                        className="h-8 flex-1 min-w-[32px] px-0 text-sm font-bold text-white bg-secondary border-none rounded-md cursor-pointer transition-all hover:bg-slate-800 hover:-translate-y-px active:translate-y-0"
-                                                    >
-                                                        +1
-                                                    </button>
+                                <div key={item.cartItemId} className="flex flex-col gap-3 mb-6 p-4 rounded-lg bg-slate-50 border border-slate-200 transition-all hover:shadow-sm">
+                                    <div className="flex gap-4">
+                                        <div className="w-20 h-20 shrink-0 bg-gray-100 rounded-md overflow-hidden border border-slate-200">
+                                            <img
+                                                src={item.variant?.variant_image || (item.images && item.images[0]) || '/placeholder.jpg'}
+                                                alt={item.name[locale] || item.name['en']}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                        <div className="flex-1 flex flex-col gap-3">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <h4 className="text-base text-secondary font-semibold m-0 leading-snug">{item.name[locale] || item.name['en']}</h4>
+                                                    {item.variant && (
+                                                        <p className="text-sm text-gray-500 mt-0.5 m-0">
+                                                            {(item.variant.variant_name === 'Color' || !item.variant.variant_name) ? tProduct('color') : item.variant.variant_name}: {locale === 'id' ? (item.variant.variant_value_id || item.variant.variant_value) : (item.variant.variant_value_en || item.variant.variant_value)}
+                                                        </p>
+                                                    )}
                                                 </div>
-
-                                                {/* Done & Trash Row */}
-                                                <div className="flex items-center gap-2">
-                                                    <button
-                                                        onClick={() => setEditingItemId(null)}
-                                                        className="flex-1 h-9 px-3 text-sm font-bold text-white bg-primary border-none rounded-md cursor-pointer transition-colors hover:bg-[#5c1313] shadow-sm"
-                                                    >
-                                                        {t('done')}
-                                                    </button>
-
-                                                    <button
-                                                        onClick={() => setItemToRemove(item.id)}
-                                                        className="w-9 h-9 border border-slate-200 bg-white rounded-md p-2 text-slate-400 flex items-center justify-center transition-all cursor-pointer hover:text-red-500 hover:bg-red-50 hover:border-red-200 shadow-sm"
-                                                        aria-label={locale === 'id' ? 'Hapus' : 'Remove'}
-                                                    >
-                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                                                        </svg>
-                                                    </button>
-                                                </div>
+                                                <p className="text-primary font-semibold text-[0.95rem] m-0 shrink-0 ml-2">{formatPrice(item.price)}</p>
                                             </div>
-                                        ) : (
-                                            <div className="flex items-center justify-between gap-3">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="font-bold text-[0.95rem] text-secondary bg-slate-100 px-3 py-1.5 rounded-md border border-slate-200">
-                                                        {item.quantity}m
-                                                    </span>
-                                                    <button
-                                                        onClick={() => setEditingItemId(item.id)}
-                                                        className="text-xs font-semibold text-primary underline hover:text-[#5c1313] bg-transparent border-none cursor-pointer p-0"
-                                                    >
-                                                        {t('change')}
-                                                    </button>
-                                                </div>
+                                            <div className="w-full">
+                                                {editingItemId === item.cartItemId ? (
+                                                    <div className="flex flex-col gap-3 animate-fadeIn">
+                                                        {/* Increment Controls */}
+                                                        <div className="flex items-center justify-between gap-1 bg-white p-1.5 rounded-lg border border-slate-300 shadow-sm w-full">
+                                                            <button
+                                                                onClick={() => changeQuantity(item, -1)}
+                                                                title="-1m"
+                                                                className="h-8 flex-1 min-w-[32px] px-0 text-sm font-bold text-white bg-secondary border-none rounded-md cursor-pointer transition-all hover:bg-slate-800 hover:-translate-y-px active:translate-y-0"
+                                                            >
+                                                                −1
+                                                            </button>
+                                                            <button
+                                                                onClick={() => changeQuantity(item, -0.25)}
+                                                                title="-0.25m"
+                                                                className="h-7 flex-1 min-w-[36px] px-0 text-[10px] font-semibold text-secondary bg-slate-50 border border-slate-200 rounded-md cursor-pointer transition-all hover:bg-secondary hover:text-white hover:border-secondary active:scale-95"
+                                                            >
+                                                                −.25
+                                                            </button>
+                                                            <span className="font-bold min-w-[48px] text-center text-[0.95rem] text-secondary tabular-nums">{item.quantity}m</span>
+                                                            <button
+                                                                onClick={() => changeQuantity(item, 0.25)}
+                                                                title="+0.25m"
+                                                                className="h-7 flex-1 min-w-[36px] px-0 text-[10px] font-semibold text-secondary bg-slate-50 border border-slate-200 rounded-md cursor-pointer transition-all hover:bg-secondary hover:text-white hover:border-secondary active:scale-95"
+                                                            >
+                                                                +.25
+                                                            </button>
+                                                            <button
+                                                                onClick={() => changeQuantity(item, 1)}
+                                                                title="+1m"
+                                                                className="h-8 flex-1 min-w-[32px] px-0 text-sm font-bold text-white bg-secondary border-none rounded-md cursor-pointer transition-all hover:bg-slate-800 hover:-translate-y-px active:translate-y-0"
+                                                            >
+                                                                +1
+                                                            </button>
+                                                        </div>
 
-                                                <button
-                                                    onClick={() => setItemToRemove(item.id)}
-                                                    className="w-9 h-9 border border-slate-200 bg-white rounded-md p-2 text-slate-400 flex items-center justify-center transition-all cursor-pointer hover:text-red-500 hover:bg-red-50 hover:border-red-200 shadow-sm"
-                                                    aria-label={locale === 'id' ? 'Hapus' : 'Remove'}
-                                                >
-                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                                                        <line x1="14" y1="11" x2="14" y2="17"></line>
-                                                    </svg>
-                                                </button>
+                                                        {/* Done & Trash Row */}
+                                                        <div className="flex items-center gap-2">
+                                                            <button
+                                                                onClick={() => setEditingItemId(null)}
+                                                                className="flex-1 h-9 px-3 text-sm font-bold text-white bg-primary border-none rounded-md cursor-pointer transition-colors hover:bg-[#5c1313] shadow-sm"
+                                                            >
+                                                                {t('done')}
+                                                            </button>
+
+                                                            <button
+                                                                onClick={() => setItemToRemove(item.cartItemId)}
+                                                                className="w-9 h-9 border border-slate-200 bg-white rounded-md p-2 text-slate-400 flex items-center justify-center transition-all cursor-pointer hover:text-red-500 hover:bg-red-50 hover:border-red-200 shadow-sm"
+                                                                aria-label={locale === 'id' ? 'Hapus' : 'Remove'}
+                                                            >
+                                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-between gap-3">
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="font-bold text-[0.95rem] text-secondary bg-slate-100 px-3 py-1.5 rounded-md border border-slate-200">
+                                                                {item.quantity}m
+                                                            </span>
+                                                            <button
+                                                                onClick={() => setEditingItemId(item.cartItemId)}
+                                                                className="text-xs font-semibold text-primary underline hover:text-[#5c1313] bg-transparent border-none cursor-pointer p-0"
+                                                            >
+                                                                {t('change')}
+                                                            </button>
+                                                        </div>
+
+                                                        <button
+                                                            onClick={() => setItemToRemove(item.cartItemId)}
+                                                            className="w-9 h-9 border border-slate-200 bg-white rounded-md p-2 text-slate-400 flex items-center justify-center transition-all cursor-pointer hover:text-red-500 hover:bg-red-50 hover:border-red-200 shadow-sm"
+                                                            aria-label={locale === 'id' ? 'Hapus' : 'Remove'}
+                                                        >
+                                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </div>
                             ))

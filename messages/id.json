@@ -56,7 +56,9 @@
     "perMeter": "/ meter",
     "showFineControl": "+ Ukuran presisi (0.25m)",
     "hideFineControl": "− Sembunyikan ukuran presisi",
-    "addToCart": "Tambah ke Keranjang"
+    "addToCart": "Tambah ke Keranjang",
+    "color": "Warna",
+    "outOfStock": "Stok Habis"
   },
   "Checkout": {
     "title": "Checkout",

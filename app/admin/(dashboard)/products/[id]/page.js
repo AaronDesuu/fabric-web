@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { uploadImage, generateUniqueFileName, deleteImage } from '@/lib/supabase/storage';
 import ImageUploader from '@/app/admin/components/ImageUploader';
+import VariantManager from '@/app/admin/components/VariantManager';
 
 const initialCategories = [
     { value: 'cotton', label: 'Cotton' },
@@ -32,6 +33,19 @@ export default function EditProductPage({ params }) {
         { file: null, preview: null, url: null },
         { file: null, preview: null, url: null }
     ]);
+
+    const [variants, setVariants] = useState([]);
+
+    // Update stock based on variants
+    useEffect(() => {
+        if (variants.length > 0) {
+            const totalStock = variants.reduce((sum, v) => sum + (parseFloat(v.stock_meters) || 0), 0);
+            setFormData(prev => ({
+                ...prev,
+                stock_meters: totalStock
+            }));
+        }
+    }, [variants]);
 
     const [categories, setCategories] = useState(initialCategories);
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
@@ -144,6 +158,16 @@ export default function EditProductPage({ params }) {
                 featured: data.featured || false,
                 active: data.active !== false,
             });
+
+            // Fetch variants
+            const { data: variantsData } = await supabase
+                .from('product_variants')
+                .select('*')
+                .eq('product_id', id);
+
+            if (variantsData) {
+                setVariants(variantsData);
+            }
 
             // If category is not in initial list, add it
             if (data.category && !initialCategories.some(c => c.value === data.category)) {
@@ -287,6 +311,56 @@ export default function EditProductPage({ params }) {
 
             if (updateError) {
                 throw new Error(updateError.message);
+            }
+
+            // Handle Variants
+            // 1. Get current variants IDs from DB for deletion check
+            const { data: currentVariantsDB } = await supabase
+                .from('product_variants')
+                .select('id')
+                .eq('product_id', id);
+
+            const currentVariantIds = currentVariantsDB ? currentVariantsDB.map(v => v.id) : [];
+
+            // 2. Prepare variants for upsert
+            // 2. Prepare variants for upsert
+            // Upload new variant images first
+            const variantsToUpsert = await Promise.all(variants.map(async v => {
+                let imageUrl = v.variant_image; // Keep existing image by default
+
+                if (v.imageFile) {
+                    const fileName = `variants/${Date.now()}_${v.imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
+                    const { url, error } = await uploadImage(v.imageFile, fileName);
+                    if (error) throw new Error(`Variant image upload failed: ${error.message}`);
+                    imageUrl = url;
+                }
+
+                return {
+                    id: (v.id && typeof v.id === 'string') ? v.id : undefined,
+                    product_id: id,
+                    variant_name: v.variant_name || 'Color',
+                    variant_value_en: v.variant_value_en || v.variant_value,
+                    variant_value_id: v.variant_value_id || v.variant_value,
+                    variant_image: imageUrl,
+                    stock_meters: parseFloat(v.stock_meters) || 0
+                };
+            }));
+
+            // 3. Delete removed variants
+            const activeIds = variantsToUpsert.filter(v => v.id).map(v => v.id);
+            const idsToDelete = currentVariantIds.filter(vid => !activeIds.includes(vid));
+
+            if (idsToDelete.length > 0) {
+                await supabase.from('product_variants').delete().in('id', idsToDelete);
+            }
+
+            // 4. Upsert (Insert/Update) active variants
+            if (variantsToUpsert.length > 0) {
+                const { error: variantError } = await supabase
+                    .from('product_variants')
+                    .upsert(variantsToUpsert);
+
+                if (variantError) throw new Error(`Variants error: ${variantError.message}`);
             }
 
             router.push('/admin/products?success=Product updated successfully');
@@ -587,11 +661,16 @@ export default function EditProductPage({ params }) {
                                         name="stock_meters"
                                         value={formData.stock_meters}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${variants.length > 0 ? 'bg-gray-100' : ''}`}
                                         placeholder="e.g., 100"
                                         min="0"
                                         step="0.5"
+                                        readOnly={variants.length > 0}
                                     />
+                                    {variants.length > 0 && <p className="text-xs text-gray-500 mt-1">Stock calculated from variants below.</p>}
+                                    <div className="border-t border-gray-100 pt-4">
+                                        <VariantManager variants={variants} onVariantsChange={setVariants} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -655,36 +734,38 @@ export default function EditProductPage({ params }) {
                         {saving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
-            </form>
+            </form >
 
             {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Product?</h2>
-                        <p className="text-gray-600 mb-6">
-                            Are you sure you want to delete <strong>{formData.name_en}</strong>?
-                            This action cannot be undone.
-                        </p>
-                        <div className="flex justify-end gap-3">
-                            <button
-                                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                                onClick={() => setShowDeleteConfirm(false)}
-                                disabled={deleting}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors"
-                                onClick={handleDelete}
-                                disabled={deleting}
-                            >
-                                {deleting ? 'Deleting...' : 'Delete'}
-                            </button>
+            {
+                showDeleteConfirm && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Product?</h2>
+                            <p className="text-gray-600 mb-6">
+                                Are you sure you want to delete <strong>{formData.name_en}</strong>?
+                                This action cannot be undone.
+                            </p>
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                    onClick={() => setShowDeleteConfirm(false)}
+                                    disabled={deleting}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors"
+                                    onClick={handleDelete}
+                                    disabled={deleting}
+                                >
+                                    {deleting ? 'Deleting...' : 'Delete'}
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

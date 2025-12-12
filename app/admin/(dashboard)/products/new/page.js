@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { uploadImage, generateUniqueFileName } from '@/lib/supabase/storage';
 import ImageUploader from '@/app/admin/components/ImageUploader';
+import VariantManager from '@/app/admin/components/VariantManager';
 
 const initialCategories = [
     { value: 'cotton', label: 'Cotton' },
@@ -28,6 +29,20 @@ export default function NewProductPage() {
         { file: null, preview: null, url: null },
         { file: null, preview: null, url: null }
     ]);
+
+    // Product Variants
+    const [variants, setVariants] = useState([]);
+
+    // Update stock based on variants
+    useEffect(() => {
+        if (variants.length > 0) {
+            const totalStock = variants.reduce((sum, v) => sum + (parseFloat(v.stock_meters) || 0), 0);
+            setFormData(prev => ({
+                ...prev,
+                stock_meters: totalStock
+            }));
+        }
+    }, [variants]);
 
     const [categories, setCategories] = useState(initialCategories);
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
@@ -233,6 +248,40 @@ export default function NewProductPage() {
 
             if (insertError) {
                 throw new Error(insertError.message);
+            }
+
+            // Insert variants if any
+            if (variants.length > 0) {
+                // Upload variant images first
+                const variantsWithImages = await Promise.all(variants.map(async (v) => {
+                    let imageUrl = null;
+                    if (v.imageFile) {
+                        const fileName = `variants/${Date.now()}_${v.imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
+                        const { url, error } = await uploadImage(v.imageFile, fileName);
+                        if (error) throw new Error(`Variant color upload failed: ${error.message}`);
+                        imageUrl = url;
+                    }
+                    return { ...v, variant_image: imageUrl };
+                }));
+
+                const variantsToInsert = variantsWithImages.map(v => ({
+                    product_id: data.id,
+                    variant_name: v.variant_name || 'Color',
+                    variant_value_en: v.variant_value_en || v.variant_value,
+                    variant_value_id: v.variant_value_id || v.variant_value,
+                    variant_image: v.variant_image,
+                    stock_meters: parseFloat(v.stock_meters) || 0
+                }));
+
+                const { error: variantsError } = await supabase
+                    .from('product_variants')
+                    .insert(variantsToInsert);
+
+                if (variantsError) {
+                    // Note: Product created but variants failed. We might want to alert or cleanup.
+                    // For now just throw error to show message.
+                    throw new Error(`Product created but variants failed: ${variantsError.message}`);
+                }
             }
 
             router.push('/admin/products?success=Product created successfully');
@@ -483,11 +532,17 @@ export default function NewProductPage() {
                                         name="stock_meters"
                                         value={formData.stock_meters}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${variants.length > 0 ? 'bg-gray-100' : ''}`}
                                         placeholder="e.g., 100"
                                         min="0"
                                         step="0.5"
+                                        readOnly={variants.length > 0}
                                     />
+                                    {variants.length > 0 && <p className="text-xs text-gray-500 mt-1">Stock calculated from variants below.</p>}
+                                </div>
+
+                                <div className="border-t border-gray-100 pt-4">
+                                    <VariantManager variants={variants} onVariantsChange={setVariants} />
                                 </div>
                             </div>
                         </div>

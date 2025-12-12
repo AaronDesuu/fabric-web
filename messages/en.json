@@ -56,7 +56,9 @@
     "perMeter": "/ meter",
     "showFineControl": "+ Precise measurement (0.25m)",
     "hideFineControl": "− Hide precise measurement",
-    "addToCart": "Add to Cart"
+    "addToCart": "Add to Cart",
+    "color": "Color",
+    "outOfStock": "Out of Stock"
   },
   "Checkout": {
     "title": "Checkout",

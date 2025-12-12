@@ -52,11 +52,16 @@ module.exports = {
                         transform: 'translateX(0)',
                     },
                 },
+                fadeIn: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
             },
             animation: {
                 fadeInUp: 'fadeInUp 1s ease-out forwards',
                 float: 'float 3s ease-in-out infinite',
                 slideInFromLeft: 'slideInFromLeft 0.8s ease-out forwards',
+                fadeIn: 'fadeIn 0.5s ease-in-out forwards',
             },
         },
     },

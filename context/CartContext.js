@@ -12,7 +12,14 @@ export function CartProvider({ children }) {
     useEffect(() => {
         const savedCart = localStorage.getItem('fabric_cart');
         if (savedCart) {
-            setCart(JSON.parse(savedCart));
+            const parsed = JSON.parse(savedCart);
+            // Migrate old items to have cartItemId
+            const migrated = parsed.map(item => ({
+                ...item,
+                cartItemId: item.cartItemId || item.id,
+                variant: item.variant || null
+            }));
+            setCart(migrated);
         }
     }, []);
 
@@ -21,30 +28,38 @@ export function CartProvider({ children }) {
         localStorage.setItem('fabric_cart', JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = (product, quantity = 1) => {
+    const addToCart = (product, quantity = 1, variant = null) => {
         setCart((prev) => {
-            const existing = prev.find((item) => item.id === product.id);
+            const cartItemId = variant ? `${product.id}-${variant.id}` : product.id;
+            const existing = prev.find((item) => item.cartItemId === cartItemId);
+
             if (existing) {
                 return prev.map((item) =>
-                    item.id === product.id
+                    item.cartItemId === cartItemId
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
             }
-            return [...prev, { ...product, quantity }];
+
+            return [...prev, {
+                ...product,
+                quantity,
+                variant,
+                cartItemId
+            }];
         });
         setIsOpen(true);
     };
 
-    const removeFromCart = (productId) => {
-        setCart((prev) => prev.filter((item) => item.id !== productId));
+    const removeFromCart = (cartItemId) => {
+        setCart((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
     };
 
-    const updateQuantity = (productId, quantity) => {
+    const updateQuantity = (cartItemId, quantity) => {
         if (quantity < 1) return;
         setCart((prev) =>
             prev.map((item) =>
-                item.id === productId ? { ...item, quantity } : item
+                item.cartItemId === cartItemId ? { ...item, quantity } : item
             )
         );
     };
