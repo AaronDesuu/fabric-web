@@ -1,21 +1,34 @@
 import AddToCart from '@/components/AddToCart';
-import { getProducts, getProductById } from '@/lib/supabase/products';
+import { getProductById } from '@/lib/supabase/products';
 import { notFound } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
 
 
 export async function generateStaticParams() {
     const locales = ['en', 'id'];
     const params = [];
 
-    // Fetch all products from Supabase for static generation
-    const products = await getProducts();
+    // Use direct Supabase client for build-time static generation
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
 
-    for (const locale of locales) {
-        for (const product of products) {
-            params.push({
-                locale: locale,
-                slug: product.id
-            });
+    // Fetch all products from Supabase for static generation
+    const { data: products } = await supabase
+        .from('products')
+        .select('id')
+        .eq('active', true);
+
+    // If products exist, generate params
+    if (products && products.length > 0) {
+        for (const locale of locales) {
+            for (const product of products) {
+                params.push({
+                    locale: locale,
+                    slug: product.id
+                });
+            }
         }
     }
 
