@@ -51,21 +51,39 @@ export default function CheckoutPage({ params }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Format Order Text
-        let message = `*New Order from Website*\n\n`;
-        message += `*Customer Details:*\n`;
-        message += `Name: ${formData.name}\n`;
-        message += `WhatsApp: ${formData.whatsapp}\n`;
-        message += `Address: ${formData.address}\n`;
-        if (formData.notes) message += `Notes: ${formData.notes}\n`;
+        const isId = locale === 'id';
 
-        message += `\n*Order Details:*\n`;
+        // Format Order Text (Localized)
+        let message = isId ? `*Pesanan Baru dari Website*\n\n` : `*New Order from Website*\n\n`;
+
+        message += isId ? `*Detail Pelanggan:*\n` : `*Customer Details:*\n`;
+        message += isId ? `Nama: ${formData.name}\n` : `Name: ${formData.name}\n`;
+        message += `WhatsApp: ${formData.whatsapp}\n`;
+        message += isId ? `Alamat: ${formData.address}\n` : `Address: ${formData.address}\n`;
+        if (formData.notes) message += isId ? `Catatan: ${formData.notes}\n` : `Notes: ${formData.notes}\n`;
+
+        message += isId ? `\n*Detail Pesanan:*\n` : `\n*Order Details:*\n`;
+
         cart.forEach(item => {
-            message += `- ${item.name[locale] || item.name['en']} (${item.quantity}m) - ${formatPrice(item.price * item.quantity)}\n`;
+            // Get localized variant text if it exists
+            let variantText = '';
+            if (item.variant) {
+                const vValue = isId ? item.variant.variant_value : (item.variant.variant_value_en || item.variant.variant_value);
+                const vName = item.variant.variant_name || (isId ? 'Varian' : 'Variant');
+                variantText = ` - ${vName}: ${vValue}`;
+            }
+
+            const itemName = item.name[locale] || item.name['en'] || item.name;
+            message += `- ${itemName}${variantText} (${item.quantity}m) - ${formatPrice(item.price * item.quantity)}\n`;
         });
 
-        message += `\n*Total: ${formatPrice(total)}*\n`;
-        message += `\nPayment: ${formData.paymentMethod.replace('_', ' ').toUpperCase()}`;
+        message += isId ? `\n*Total: ${formatPrice(total)}*\n` : `\n*Total: ${formatPrice(total)}*\n`;
+
+        const paymentLabel = formData.paymentMethod === 'bank_transfer'
+            ? (isId ? 'Transfer Bank' : 'Bank Transfer')
+            : (isId ? 'QRIS / E-Wallet' : 'QRIS / E-Wallet');
+
+        message += isId ? `\nPembayaran: ${paymentLabel}` : `\nPayment: ${paymentLabel}`;
         message += `\nDelivery: ${formData.deliveryMethod.toUpperCase()}`;
 
         // Encode and Redirect
