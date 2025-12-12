@@ -3,7 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import SearchBar from '@/components/SearchBar';
 import CategoryFilter from '@/components/CategoryFilter';
 import AutoOpenCart from '@/components/AutoOpenCart';
-import { products } from '@/lib/products';
+import { getProducts } from '@/lib/supabase/products';
 
 
 export default async function ShopPage({ params, searchParams }) {
@@ -14,7 +14,11 @@ export default async function ShopPage({ params, searchParams }) {
     // Support multiple categories (comma-separated)
     const selectedCategories = category ? category.toLowerCase().split(',').filter(Boolean) : [];
 
-    const filteredProducts = products.filter(product => {
+    // Fetch products from Supabase
+    const allProducts = await getProducts();
+
+    // Filter products based on search and category
+    const filteredProducts = allProducts.filter(product => {
         const name = product.name[locale].toLowerCase();
         const desc = product.description[locale].toLowerCase();
         const matchesSearch = name.includes(query) || desc.includes(query);

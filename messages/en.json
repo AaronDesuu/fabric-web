@@ -55,7 +55,8 @@
   "Product": {
     "perMeter": "/ meter",
     "showFineControl": "+ Precise measurement (0.25m)",
-    "hideFineControl": "− Hide precise measurement"
+    "hideFineControl": "− Hide precise measurement",
+    "addToCart": "Add to Cart"
   },
   "Checkout": {
     "title": "Checkout",

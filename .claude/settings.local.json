@@ -3,7 +3,10 @@
     "allow": [
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Bash(node scripts/migrate-products.js:*)",
+      "Bash(npm run dev:*)"
     ]
   }
 }

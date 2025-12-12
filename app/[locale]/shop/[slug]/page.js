@@ -1,11 +1,14 @@
 import AddToCart from '@/components/AddToCart';
-import { products } from '@/lib/products';
+import { getProducts, getProductById } from '@/lib/supabase/products';
 import { notFound } from 'next/navigation';
 
 
 export async function generateStaticParams() {
     const locales = ['en', 'id'];
     const params = [];
+
+    // Fetch all products from Supabase for static generation
+    const products = await getProducts();
 
     for (const locale of locales) {
         for (const product of products) {
@@ -21,7 +24,9 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }) {
     const { slug, locale } = await params;
-    const product = products.find((p) => p.id === slug);
+
+    // Fetch product from Supabase
+    const product = await getProductById(slug);
 
     if (!product) {
         notFound();

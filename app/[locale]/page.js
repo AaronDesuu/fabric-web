@@ -1,5 +1,5 @@
 import Hero from '@/components/Hero';
-import { products } from '@/lib/products';
+import { getProducts } from '@/lib/supabase/products';
 import { getTranslations } from 'next-intl/server';
 import AnimatedProductCard from '@/components/AnimatedProductCard';
 import AnimatedTitle from '@/components/AnimatedTitle';
@@ -8,7 +8,8 @@ export default async function Home({ params }) {
   const { locale } = await params;
   const t = await getTranslations('Home');
 
-  const featuredProducts = products.slice(0, 3);
+  // Fetch featured products from Supabase
+  const featuredProducts = await getProducts({ featuredOnly: true });
 
   return (
     <main className="bg-black">

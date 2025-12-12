@@ -55,7 +55,8 @@
   "Product": {
     "perMeter": "/ meter",
     "showFineControl": "+ Ukuran presisi (0.25m)",
-    "hideFineControl": "− Sembunyikan ukuran presisi"
+    "hideFineControl": "− Sembunyikan ukuran presisi",
+    "addToCart": "Tambah ke Keranjang"
   },
   "Checkout": {
     "title": "Checkout",
