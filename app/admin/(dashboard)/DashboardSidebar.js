@@ -1,12 +1,20 @@
 'use client';
 
+import { signOut } from '@/lib/supabase/auth-client';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
 
 export default function DashboardSidebar({ currentUser, adminData }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await signOut();
+        router.push('/admin/login');
+        router.refresh();
+    };
 
     const isActive = (path) => pathname.startsWith(path);
 
@@ -93,11 +101,10 @@ export default function DashboardSidebar({ currentUser, adminData }) {
                         <Link
                             href="/admin/products"
                             onClick={() => setMobileMenuOpen(false)}
-                            className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                                isActive('/admin/products')
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                            }`}
+                            className={`flex items-center px-4 py-3 rounded-lg transition-colors ${isActive('/admin/products')
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                }`}
                         >
                             <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -107,11 +114,10 @@ export default function DashboardSidebar({ currentUser, adminData }) {
                         <Link
                             href="/admin/orders"
                             onClick={() => setMobileMenuOpen(false)}
-                            className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                                isActive('/admin/orders')
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                            }`}
+                            className={`flex items-center px-4 py-3 rounded-lg transition-colors ${isActive('/admin/orders')
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                }`}
                         >
                             <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -121,11 +127,10 @@ export default function DashboardSidebar({ currentUser, adminData }) {
                         <Link
                             href="/admin/users"
                             onClick={() => setMobileMenuOpen(false)}
-                            className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                                isActive('/admin/users')
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                            }`}
+                            className={`flex items-center px-4 py-3 rounded-lg transition-colors ${isActive('/admin/users')
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                }`}
                         >
                             <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -136,7 +141,10 @@ export default function DashboardSidebar({ currentUser, adminData }) {
 
                     {/* Logout */}
                     <div className="px-4 py-4 border-t border-gray-800">
-                        <button className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
+                        >
                             <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>

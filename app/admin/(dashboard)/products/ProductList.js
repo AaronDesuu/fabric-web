@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 function formatPrice(price) {
@@ -15,8 +15,26 @@ function formatPrice(price) {
 
 export default function ProductList({ products }) {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [deleting, setDeleting] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
+    useEffect(() => {
+        const success = searchParams.get('success');
+        if (success) {
+            setToastMessage(success);
+            setShowToast(true);
+            // Hide after 3 seconds
+            const timer = setTimeout(() => {
+                setShowToast(false);
+                // Optional: Clear URL param cleanly
+                router.replace('/admin/products', { scroll: false });
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [searchParams, router]);
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
@@ -83,6 +101,23 @@ export default function ProductList({ products }) {
 
     return (
         <div>
+            {/* Toast Notification */}
+            {showToast && (
+                <div className="fixed top-4 right-4 z-50 animate-fade-in-down">
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-lg flex items-center gap-2" role="alert">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                        </svg>
+                        <span className="block sm:inline font-medium">{toastMessage}</span>
+                        <button onClick={() => setShowToast(false)} className="ml-2 text-green-700 hover:text-green-900">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Desktop Bulk Delete Button */}
             {selectedProducts.length > 0 && (
                 <div className="hidden lg:flex mb-4 items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-4">

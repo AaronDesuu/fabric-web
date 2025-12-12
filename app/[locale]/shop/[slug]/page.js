@@ -1,4 +1,5 @@
 import AddToCart from '@/components/AddToCart';
+import ProductGallery from '@/components/ProductGallery';
 import { getProductById } from '@/lib/supabase/products';
 import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
@@ -65,9 +66,7 @@ export default async function ProductPage({ params }) {
 
     return (
         <div className="max-w-container mx-auto py-8 md:py-16 px-4 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
-            <div className="bg-[#f5f5f0] rounded-lg overflow-hidden relative aspect-square">
-                <img src={product.image} alt={product.name[locale]} className="w-full h-full object-cover" />
-            </div>
+            <ProductGallery images={product.images} title={product.name[locale]} />
             <div className="flex flex-col gap-6">
                 <h1 className="font-heading text-5xl text-primary">{product.name[locale]}</h1>
                 <div className="text-3xl font-semibold text-secondary">
