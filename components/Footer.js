@@ -1,6 +1,9 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 export default function Footer() {
+    const t = useTranslations('Footer');
     const currentYear = new Date().getFullYear();
 
     return (
@@ -21,7 +24,7 @@ export default function Footer() {
                         </div>
                         <div className="h-1 w-20 bg-gradient-to-r from-primary via-accent to-primary rounded-full"></div>
                         <p className="text-secondary text-center text-sm leading-relaxed font-medium max-w-lg">
-                            Premium fabric provider specializing in high-quality materials for fashion designers and textile enthusiasts.
+                            {t('description')}
                         </p>
                     </div>
                 </div>
@@ -34,11 +37,10 @@ export default function Footer() {
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3"></circle>
                             </svg>
-                            Location
+                            {t('location')}
                         </h3>
                         <p className="text-gray-300 text-sm leading-relaxed">
-                            Jl. Textile Premium No. 88<br />
-                            Surabaya, Jawa Timur, Indonesia
+                            {t('address')}
                         </p>
                     </div>
 
@@ -47,7 +49,7 @@ export default function Footer() {
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                             </svg>
-                            Contact
+                            {t('contact')}
                         </h3>
                         <a href="mailto:hello@scorpiotextiles.com" className="text-gray-300 text-sm hover:text-white transition-colors">
                             hello@scorpiotextiles.com
@@ -64,7 +66,7 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="pt-4 border-t border-white/20 text-center">
                     <p className="text-gray-300 text-xs">
-                        © {currentYear} Scorpio Textiles. All rights reserved.
+                        {t('copyright', { year: currentYear })}
                     </p>
                 </div>
             </div>

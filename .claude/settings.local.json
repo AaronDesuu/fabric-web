@@ -6,7 +6,8 @@
       "Bash(git push:*)",
       "Bash(npm install:*)",
       "Bash(node scripts/migrate-products.js:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

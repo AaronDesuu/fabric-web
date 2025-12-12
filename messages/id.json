@@ -75,5 +75,12 @@
     "emptyCart": "Keranjang Anda kosong",
     "returnToShop": "Kembali Belanja",
     "changeOrder": "Ubah Pesanan"
+  },
+  "Footer": {
+    "description": "Penyedia kain premium yang mengkhususkan diri dalam bahan berkualitas tinggi untuk desainer fashion dan penggemar tekstil.",
+    "location": "Lokasi",
+    "address": "Jl. Textile Premium No. 88\nSurabaya, Jawa Timur, Indonesia",
+    "contact": "Kontak",
+    "copyright": "© {year} Scorpio Textiles. Hak cipta dilindungi."
   }
 }

@@ -75,5 +75,12 @@
     "emptyCart": "Your cart is empty",
     "returnToShop": "Return to Shop",
     "changeOrder": "Change Order"
+  },
+  "Footer": {
+    "description": "Premium fabric provider specializing in high-quality materials for fashion designers and textile enthusiasts.",
+    "location": "Location",
+    "address": "Jl. Textile Premium No. 88\nSurabaya, Jawa Timur, Indonesia",
+    "contact": "Contact",
+    "copyright": "© {year} Scorpio Textiles. All rights reserved."
   }
 }
