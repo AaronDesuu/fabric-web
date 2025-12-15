@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import ProductGallery from './ProductGallery';
 import AddToCart from './AddToCart';
+import ProductCard from './ProductCard';
 
-export default function ProductInterface({ product, locale, tProduct, variants = [] }) {
+export default function ProductInterface({ product, locale, tProduct, variants = [], relatedProducts = [] }) {
     const [selectedVariant, setSelectedVariant] = useState(variants.length > 0 ? variants[0] : null);
 
     // Determine which image to show
@@ -49,6 +50,20 @@ export default function ProductInterface({ product, locale, tProduct, variants =
                     <p className="text-[1.1rem] text-[#555] leading-relaxed">{product.description[locale]}</p>
                 </div>
             </div>
-        </div >
+            {/* Related Products Section */}
+            {relatedProducts && relatedProducts.length > 0 && (
+                <div className="col-span-1 md:col-span-2 mt-16 pt-16 border-t border-gray-100">
+                    <h2 className="text-3xl font-heading text-primary mb-8 text-center">
+                        {locale === 'id' ? 'Mungkin Anda Juga Suka' : 'You Might Also Like'}
+                    </h2>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                        {relatedProducts.map(related => (
+                            <ProductCard key={related.id} product={related} locale={locale} />
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }

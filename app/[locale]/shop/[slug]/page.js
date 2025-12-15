@@ -1,5 +1,5 @@
 import ProductInterface from '@/components/ProductInterface';
-import { getProductById } from '@/lib/supabase/products';
+import { getProductById, getRelatedProducts } from '@/lib/supabase/products';
 import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
@@ -45,6 +45,9 @@ export default async function ProductPage({ params }) {
         notFound();
     }
 
+    // Fetch related products
+    const relatedProducts = await getRelatedProducts(product.id, product.category);
+
     // NOTE: In a real app we would use `getTranslations`
     const tProduct = {
         addToCart: locale === 'id' ? 'Tambah ke Keranjang' : 'Add to Cart',
@@ -57,6 +60,7 @@ export default async function ProductPage({ params }) {
             locale={locale}
             tProduct={tProduct}
             variants={product.variants}
+            relatedProducts={relatedProducts}
         />
     );
 }
