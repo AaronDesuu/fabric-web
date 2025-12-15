@@ -60,6 +60,9 @@ export default function EditProductPage({ params }) {
         category: 'cotton',
         stock_meters: '',
         featured: false,
+        in_slider: false,
+        is_new: false,
+        is_sale: false,
         active: true,
     });
 
@@ -156,6 +159,9 @@ export default function EditProductPage({ params }) {
                 category: data.category || 'cotton',
                 stock_meters: data.stock_meters?.toString() || '',
                 featured: data.featured || false,
+                in_slider: data.in_slider || false,
+                is_new: data.is_new || false,
+                is_sale: data.is_sale || false,
                 active: data.active !== false,
             });
 
@@ -300,6 +306,9 @@ export default function EditProductPage({ params }) {
                 category: formData.category,
                 stock_meters: parseFloat(formData.stock_meters) || 0,
                 featured: formData.featured,
+                in_slider: formData.in_slider,
+                is_new: formData.is_new,
+                is_sale: formData.is_sale,
                 active: formData.active,
                 image_urls: uploadedUrls,
             };
@@ -712,6 +721,36 @@ export default function EditProductPage({ params }) {
                                         className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                                     />
                                     <span className="ml-2 text-sm text-gray-700">Featured (show on homepage)</span>
+                                </label>
+                                <label className="flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="in_slider"
+                                        checked={formData.in_slider}
+                                        onChange={handleChange}
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="ml-2 text-sm text-gray-700">In Slider (show in shop slider)</span>
+                                </label>
+                                <label className="flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="is_new"
+                                        checked={formData.is_new}
+                                        onChange={handleChange}
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="ml-2 text-sm text-gray-700">New Arrival</span>
+                                </label>
+                                <label className="flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="is_sale"
+                                        checked={formData.is_sale}
+                                        onChange={handleChange}
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="ml-2 text-sm text-gray-700">On Sale</span>
                                 </label>
                             </div>
                         </div>

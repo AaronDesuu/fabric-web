@@ -24,6 +24,21 @@ export default function ProductCard({ product, locale }) {
         <div className="bg-white rounded-lg overflow-hidden shadow-sm transition-all duration-200 relative hover:-translate-y-1 hover:shadow-lg group" title={`${product.name[locale]} - ${price}`}>
             <Link href={`/shop/${product.id}`} className="block relative h-[250px] overflow-hidden bg-[#f5f5f0]">
                 <img src={product.image} alt={product.name[locale]} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+
+                {/* Status Badges */}
+                <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+                    {product.is_new && (
+                        <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wide">
+                            New
+                        </span>
+                    )}
+                    {product.is_sale && (
+                        <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wide">
+                            Sale
+                        </span>
+                    )}
+                </div>
+
                 <div className="absolute bottom-0 left-0 w-full p-4 bg-black/60 text-white flex flex-col gap-1 backdrop-blur-sm">
                     <span className="font-heading text-base font-semibold">{product.name[locale]}</span>
                     <span className="text-sm text-[#ffd700]">{price} / m</span>
