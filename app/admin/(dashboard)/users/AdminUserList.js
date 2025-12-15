@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import AlertDialog from '@/components/ui/AlertDialog';
 
 function formatDate(dateString) {
     if (!dateString) return 'Never';
@@ -14,10 +16,32 @@ function formatDate(dateString) {
 
 export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
     const router = useRouter();
+    const [dialog, setDialog] = useState({
+        isOpen: false,
+        title: '',
+        description: '',
+        confirmText: 'Confirm',
+        type: 'info',
+        onConfirm: null,
+        showCancel: true
+    });
+
+    const closeDialog = () => setDialog(prev => ({ ...prev, isOpen: false }));
+
+    const confirmRemoveAdmin = (adminId) => {
+        setDialog({
+            isOpen: true,
+            title: 'Remove Admin',
+            description: 'Are you sure you want to remove this admin? This action cannot be undone.',
+            confirmText: 'Remove',
+            type: 'danger',
+            showCancel: true,
+            onConfirm: () => handleRemoveAdmin(adminId)
+        });
+    };
 
     const handleRemoveAdmin = async (adminId) => {
-        if (!confirm('Are you sure you want to remove this admin?')) return;
-
+        closeDialog(); // Optimistically close
         const supabase = createClient();
 
         const { error } = await supabase
@@ -26,7 +50,15 @@ export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
             .eq('id', adminId);
 
         if (error) {
-            alert('Failed to remove admin: ' + error.message);
+            setDialog({
+                isOpen: true,
+                title: 'Error',
+                description: 'Failed to remove admin: ' + error.message,
+                type: 'danger',
+                showCancel: false,
+                confirmText: 'Close',
+                onConfirm: closeDialog
+            });
         } else {
             router.refresh();
         }
@@ -34,6 +66,17 @@ export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
 
     return (
         <div>
+            <AlertDialog
+                isOpen={dialog.isOpen}
+                onClose={closeDialog}
+                onConfirm={dialog.onConfirm}
+                title={dialog.title}
+                description={dialog.description}
+                confirmText={dialog.confirmText}
+                type={dialog.type}
+                showCancel={dialog.showCancel}
+            />
+
             {/* Mobile Card View */}
             <div className="lg:hidden space-y-4">
                 {admins.length === 0 ? (
@@ -53,11 +96,10 @@ export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
                                     </div>
                                     <div className="text-sm text-gray-600 mt-1">{admin.email}</div>
                                 </div>
-                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                    admin.role === 'super_admin'
+                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${admin.role === 'super_admin'
                                         ? 'bg-yellow-100 text-yellow-800'
                                         : 'bg-blue-100 text-blue-800'
-                                }`}>
+                                    }`}>
                                     {admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}
                                 </span>
                             </div>
@@ -68,7 +110,7 @@ export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
                             {isSuperAdmin && admin.id !== currentUserId && (
                                 <div className="mt-3 pt-3 border-t border-gray-200">
                                     <button
-                                        onClick={() => handleRemoveAdmin(admin.id)}
+                                        onClick={() => confirmRemoveAdmin(admin.id)}
                                         className="w-full px-3 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
                                     >
                                         Remove
@@ -130,11 +172,10 @@ export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
                                             {admin.email}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                                admin.role === 'super_admin'
+                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${admin.role === 'super_admin'
                                                     ? 'bg-yellow-100 text-yellow-800'
                                                     : 'bg-blue-100 text-blue-800'
-                                            }`}>
+                                                }`}>
                                                 {admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}
                                             </span>
                                         </td>
@@ -148,7 +189,7 @@ export default function AdminUserList({ admins, currentUserId, isSuperAdmin }) {
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                                                 {admin.id !== currentUserId && (
                                                     <button
-                                                        onClick={() => handleRemoveAdmin(admin.id)}
+                                                        onClick={() => confirmRemoveAdmin(admin.id)}
                                                         className="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
                                                     >
                                                         Remove

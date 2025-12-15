@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import AlertDialog from '@/components/ui/AlertDialog';
 
 function formatPrice(price) {
     return new Intl.NumberFormat('id-ID', {
@@ -20,6 +21,19 @@ export default function ProductList({ products }) {
     const [deleting, setDeleting] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+
+    // Dialog State
+    const [dialog, setDialog] = useState({
+        isOpen: false,
+        title: '',
+        description: '',
+        confirmText: 'Confirm',
+        type: 'info',
+        onConfirm: null,
+        showCancel: true
+    });
+
+    const closeDialog = () => setDialog(prev => ({ ...prev, isOpen: false }));
 
     useEffect(() => {
         const success = searchParams.get('success');
@@ -54,15 +68,38 @@ export default function ProductList({ products }) {
         });
     };
 
-    const handleDeleteSelected = async () => {
+    const confirmDeleteSelected = () => {
         if (selectedProducts.length === 0) return;
 
-        const confirmMessage = selectedProducts.length === 1
-            ? 'Are you sure you want to delete this product?'
-            : `Are you sure you want to delete ${selectedProducts.length} products?`;
+        const description = selectedProducts.length === 1
+            ? 'Are you sure you want to delete this product? This action cannot be undone.'
+            : `Are you sure you want to delete ${selectedProducts.length} products? This action cannot be undone.`;
 
-        if (!confirm(confirmMessage)) return;
+        setDialog({
+            isOpen: true,
+            title: 'Delete Products',
+            description,
+            confirmText: 'Delete',
+            type: 'danger',
+            showCancel: true,
+            onConfirm: handleDeleteSelected
+        });
+    };
 
+    const confirmDeleteSingle = (productId, productName) => {
+        setDialog({
+            isOpen: true,
+            title: 'Delete Product',
+            description: `Are you sure you want to delete "${productName}"? This action cannot be undone.`,
+            confirmText: 'Delete',
+            type: 'danger',
+            showCancel: true,
+            onConfirm: () => handleDeleteSingle(productId)
+        });
+    };
+
+    const handleDeleteSelected = async () => {
+        closeDialog();
         setDeleting(true);
         const supabase = createClient();
 
@@ -72,7 +109,15 @@ export default function ProductList({ products }) {
             .in('id', selectedProducts);
 
         if (error) {
-            alert('Failed to delete product(s): ' + error.message);
+            setDialog({
+                isOpen: true,
+                title: 'Error',
+                description: 'Failed to delete product(s): ' + error.message,
+                type: 'danger',
+                showCancel: false,
+                confirmText: 'Close',
+                onConfirm: closeDialog
+            });
         } else {
             setSelectedProducts([]);
             router.refresh();
@@ -80,9 +125,8 @@ export default function ProductList({ products }) {
         setDeleting(false);
     };
 
-    const handleDeleteSingle = async (productId, productName) => {
-        if (!confirm(`Are you sure you want to delete "${productName}"?`)) return;
-
+    const handleDeleteSingle = async (productId) => {
+        closeDialog();
         setDeleting(true);
         const supabase = createClient();
 
@@ -92,7 +136,15 @@ export default function ProductList({ products }) {
             .eq('id', productId);
 
         if (error) {
-            alert('Failed to delete product: ' + error.message);
+            setDialog({
+                isOpen: true,
+                title: 'Error',
+                description: 'Failed to delete product: ' + error.message,
+                type: 'danger',
+                showCancel: false,
+                confirmText: 'Close',
+                onConfirm: closeDialog
+            });
         } else {
             router.refresh();
         }
@@ -101,6 +153,17 @@ export default function ProductList({ products }) {
 
     return (
         <div>
+            <AlertDialog
+                isOpen={dialog.isOpen}
+                onClose={closeDialog}
+                onConfirm={dialog.onConfirm}
+                title={dialog.title}
+                description={dialog.description}
+                confirmText={dialog.confirmText}
+                type={dialog.type}
+                showCancel={dialog.showCancel}
+            />
+
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-4 right-4 z-50 animate-fade-in-down">
@@ -125,7 +188,7 @@ export default function ProductList({ products }) {
                         {selectedProducts.length} product{selectedProducts.length > 1 ? 's' : ''} selected
                     </span>
                     <button
-                        onClick={handleDeleteSelected}
+                        onClick={confirmDeleteSelected}
                         disabled={deleting}
                         className="inline-flex items-center px-3 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors"
                     >
@@ -153,7 +216,7 @@ export default function ProductList({ products }) {
 
                     {/* Delete Selected Button */}
                     <button
-                        onClick={handleDeleteSelected}
+                        onClick={confirmDeleteSelected}
                         disabled={deleting}
                         className="flex flex-col items-center justify-center w-14 h-14 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors"
                         title="Delete selected products"
@@ -246,7 +309,7 @@ export default function ProductList({ products }) {
                                             Edit
                                         </Link>
                                         <button
-                                            onClick={() => handleDeleteSingle(product.id, product.name_en)}
+                                            onClick={() => confirmDeleteSingle(product.id, product.name_en)}
                                             disabled={deleting}
                                             className="inline-flex items-center px-3 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors"
                                         >
@@ -385,7 +448,7 @@ export default function ProductList({ products }) {
                                                     Edit
                                                 </Link>
                                                 <button
-                                                    onClick={() => handleDeleteSingle(product.id, product.name_en)}
+                                                    onClick={() => confirmDeleteSingle(product.id, product.name_en)}
                                                     disabled={deleting}
                                                     className="inline-flex items-center p-1.5 bg-red-100 text-red-700 rounded-md hover:bg-red-200 disabled:bg-red-50 disabled:cursor-not-allowed transition-colors"
                                                     title="Delete product"
