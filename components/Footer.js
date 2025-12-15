@@ -1,6 +1,7 @@
 'use client';
 
 import { useSettings } from '@/context/SettingsContext';
+import { useTranslations } from 'next-intl';
 
 export default function Footer() {
     const t = useTranslations('Footer');
